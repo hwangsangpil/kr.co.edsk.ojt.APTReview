@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+        <typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		<typeAlias alias="defaultVO" type="kr.co.edsk.ojt.APTReview.vo.DefaultVO"/>
+		<typeAlias alias="tbAnnouncementVO" type="kr.co.edsk.ojt.APTReview.vo.TBAnnouncementVO"/>
+		<typeAlias alias="tbAptReviewVO" type="kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO"/>
+		<typeAlias alias="tbZoneCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO"/>
+		<typeAlias alias="tbBlockCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO"/>
+    </typeAliases>
+</configuration>

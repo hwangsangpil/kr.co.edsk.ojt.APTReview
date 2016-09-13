@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- Mapper 방식 -->
+	<mapper namespace="kr.co.edsk.ojt.APTReview.mapper.TBAptReviewMapper">
+	
+	
+	<!-- DAO 방식 -->
+	<!-- <mapper namespace="tbAptReviewDAO"> -->
+	    
+	<resultMap id="tbAptReviewVO" type="kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO">
+		<result property="aptReviewNo" column="APT_REVIEW_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
+		<result property="aptBlockCode" column="APT_BLOCK_CODE"/>
+		<result property="aptReviewTitle" column="APT_REVIEW_TITLE"/>
+		<result property="aptReviewContent" column="APT_REVIEW_CONTENTS"/>
+		<result property="aptReviewClick" column="APT_REVIEW_CLICKS"/>
+		<result property="aptReviewGroup" column="APT_REVIEW_GROUP"/>
+		<result property="aptReviewNum" column="APT_REVIEW_NUM"/>
+		<result property="aptReviewDepth" column="APT_REVIEW_DEPTH"/>
+		<result property="aptReviewCreateDate" column="APT_REVIEW_CREATE_DATE"/>
+		<result property="aptReviewUpdateDate" column="APT_REVIEW_UPDATE_DATE"/>
+	</resultMap>
+		
+	<resultMap id="tbZoneCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO">
+		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
+		<result property="aptZoneCodeValue" column="APT_ZONE_CODE_VALUE"/>
+	</resultMap>
+	
+	<resultMap id="tbBlockCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO">
+		<result property="aptBlockCode" column="APT_BLOCK_CODE"/>
+		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
+		<result property="aptBlockCodeValue" column="APT_BLOCK_CODE_VALUE"/>
+	</resultMap>
+	
+	<select id="selectAptReviewList" resultType="egovMap" parameterType="defaultVO">
+
+		SELECT 
+		APT_REVIEW_NO, 
+		MEMBER_NO, 
+		APT_ZONE_CODE, 
+		APT_BLOCK_CODE, 
+		APT_REVIEW_TITLE,
+		APT_REVIEW_CONTENTS,
+		APT_REVIEW_CLICKS,
+		APT_REVIEW_GROUP,
+		APT_REVIEW_NUM,
+		APT_REVIEW_DEPTH,
+		date_format(APT_REVIEW_CREATE_DATE, '%Y.%m.%d') as APT_REVIEW_CREATE_DATE,
+		date_format(APT_REVIEW_UPDATE_DATE, '%Y.%m.%d') as APT_REVIEW_UPDATE_DATE
+		FROM
+		TB_APT_REVIEW
+		<!-- <if test="searchKeyword != null and searchKeyword != ''"> <choose> 
+			<when test="searchCondition == 0"> AND ID LIKE '%' || #{searchKeyword} || 
+			'%' </when> <when test="searchCondition == 1"> AND NAME LIKE '%' || #{searchKeyword} 
+			|| '%' </when> </choose> </if> -->
+	
+		ORDER BY APT_REVIEW_NO DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex};
+
+	</select>
+
+
+	<select id="selectAptReviewListTotalCount" resultType="int" parameterType="tbBlockCodeVO">
+		
+	    SELECT COUNT(*) APT_REVIEW_NO FROM TB_APT_REVIEW WHERE 1=1;
+		
+		<!-- <if test="searchKeyword != null and searchKeyword != ''"> <choose> 
+			<when test="searchCondition == 0"> AND ID LIKE '%' || #{searchKeyword} || 
+			'%' </when> <when test="searchCondition == 1"> AND NAME LIKE '%' || #{searchKeyword} 
+			|| '%' </when> </choose> </if> -->
+
+
+	</select>
+	
+	<select id="selectZoneCode" parameterType="tbZoneCodeVO" resultMap="tbZoneCodeVO">
+	    SELECT * FROM TB_ZONE_CODE;
+	</select>
+	
+	<select id="selectBlockCode" parameterType="tbBlockCodeVO" resultMap="tbBlockCodeVO">
+	    SELECT
+	    TB_ZONE_CODE.APT_ZONE_CODE,
+	    TB_BLOCK_CODE.APT_BLOCK_CODE, 
+	    TB_BLOCK_CODE.APT_BLOCK_CODE_VALUE 
+	    FROM 
+	    TB_BLOCK_CODE
+	    JOIN
+	    TB_ZONE_CODE
+	    WHERE
+	    TB_BLOCK_CODE.APT_ZONE_CODE = TB_ZONE_CODE.APT_ZONE_CODE
+	    AND
+	    TB_ZONE_CODE.APT_ZONE_CODE = 'Z002';
+	</select>
+
+	<insert id="insertAptReview" keyProperty="aptReviewNo" useGeneratedKeys="true">
+	    
+	    INSERT INTO TB_APT_REVIEW 
+	 	( 
+	 	MEMBER_NO , 
+	    APT_ZONE_CODE, 
+	    APT_BLOCK_CODE, 
+	    APT_REVIEW_TITLE,
+		APT_REVIEW_CONTENTS, 
+		APT_REVIEW_CLICKS, 
+		APT_REVIEW_GROUP,
+		APT_REVIEW_NUM, 
+		APT_REVIEW_DEPTH, 
+		APT_REVIEW_CREATE_DATE,
+		APT_REVIEW_UPDATE_DATE 
+		) 
+		VALUES 
+		( 
+		(SELECT MEMBER_NO FROM TB_MEMBER WHERE MEMBER_NO = #{memberNo}), 
+		#{aptZoneCode}, 
+		#{aptBlockCode}, 
+		#{aptReviewTitle},
+		#{aptReviewContent}, 
+		'1', 
+		'2', 
+		'1', 
+		'1', 
+		now(), 
+		now() 
+		);
+		
+	</insert>
+
+	<update id="updateAptReview" parameterType="tbAptReviewVO">
+	    
+	    UPDATE 
+	    TB_APT_REVIEW
+		SET 
+		APT_REVIEW_TITLE = #{aptReviewTitle}, 
+		APT_REVIEW_CONTENTS = #{aptReviewContent}, 
+		APT_REVIEW_UPDATE_DATE = now() 
+		WHERE
+		APT_REVIEW_NO = #{aptReviewNo}; 
+	
+	</update>
+
+	<delete id="deleteAptReview" parameterType="int"> 
+	    
+	    DELETE 
+	    FROM
+		TB_APT_REVIEW 
+		WHERE 
+		APT_REVIEW_NO = #{aptReviewNo};
+		
+	</delete>
+
+	<select id="selectAptReviewView" parameterType="int" resultMap="tbAptReviewVO">
+	    
+		SELECT 
+		* 
+		FROM 
+		TB_APT_REVIEW 
+		WHERE 
+		APT_REVIEW_NO = #{aptReviewNo}
+	
+	</select>
+
+</mapper>

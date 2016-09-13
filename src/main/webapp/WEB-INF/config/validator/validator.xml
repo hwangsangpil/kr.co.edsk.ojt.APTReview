@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+        <form name="announcementVO">
+        	<field property="announcementNo" depends="required">
+        		<arg0 key="title.aptReview.announcementNo" />
+			</field>
+			<field property="memberNo" depends="required">
+        		<arg0 key="title.aptReview.memberNo" />
+			</field>
+			<field property="aptZoneCode" depends="required">
+        		<arg0 key="title.aptReview.aptZoneCode" />
+			</field>
+			<field property="announcementName" depends="required">
+        		<arg0 key="title.aptReview.announcementName" />
+			</field>
+			<field property="announcementStart" depends="required">
+        		<arg0 key="title.aptReview.announcementStart" />
+			</field>
+			<field property="announcementEnd" depends="required">
+        		<arg0 key="title.aptReview.announcementEnd" />
+			</field>
+			<field property="announcementAddress" depends="required">
+        		<arg0 key="title.aptReview.announcementAddress" />
+			</field>
+			<field property="announcementArea" depends="required">
+        		<arg0 key="title.aptReview.announcementArea" />
+			</field>
+			<field property="announcementAllResident" depends="required">
+        		<arg0 key="title.aptReview.announcementAllResident" />
+			</field>
+			<field property="announcementCreateDate" depends="required">
+                <arg0 key="title.aptReview.announcementCreateDate" />
+            </field>
+        	<field property="announcementUpdateDate" depends="required">
+        		<arg0 key="title.aptReview.announcementUpdateDate" />
+			</field>
+        </form>
+    </formset>
+
+</form-validation>

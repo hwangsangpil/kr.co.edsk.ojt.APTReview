@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- Mapper 방식 -->
+	<mapper namespace="kr.co.edsk.ojt.APTReview.mapper.TBAnnouncementMapper">
+
+	<!-- DAO 방식 -->
+	<!-- <mapper namespace="tbAnnouncementDAO"> -->
+	    
+	<resultMap id="tbAnnouncementVO" type="kr.co.edsk.ojt.APTReview.vo.TBAnnouncementVO">
+		<result property="announcementNo" column="ANNOUNCEMENT_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
+		<result property="announcementName" column="ANNOUNCEMENT_NAME"/>
+		<result property="announcementStart" column="ANNOUNCEMENT_START"/>
+		<result property="announcementEnd" column="ANNOUNCEMENT_END"/>
+		<result property="announcementAddress" column="ANNOUNCEMENT_ADDRESS"/>
+		<result property="announcementArea" column="ANNOUNCEMENT_AREA"/>
+		<result property="announcementAllResident" column="ANNOUNCEMENT_ALLRESIDENT"/>
+		<result property="announcementContents" column="ANNOUNCEMENT_CONTENTS"/>
+		<result property="announcementClicks" column="ANNOUNCEMENT_CLICKS"/>
+		<result property="announcementCreateDate" column="ANNOUNCEMENT_CREATE_DATE"/>
+		<result property="announcementUpdateDate" column="ANNOUNCEMENT_UPDATE_DATE"/>
+	</resultMap>
+	
+	<resultMap id="tbZoneCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO">
+		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
+		<result property="aptZoneCodeValue" column="APT_ZONE_CODE_VALUE"/>
+	</resultMap>
+
+	<select id="selectAnnouncementList" parameterType="defaultVO" resultType="egovMap">
+<!-- 
+		SELECT
+			*
+		FROM TB_ANNOUNCEMENT -->
+			
+		SELECT	
+			ANNOUNCEMENT_NO, MEMBER_NO, APT_ZONE_CODE, ANNOUNCEMENT_NAME,
+			ANNOUNCEMENT_START, ANNOUNCEMENT_END, ANNOUNCEMENT_ADDRESS, 
+			ANNOUNCEMENT_AREA, ANNOUNCEMENT_ALLRESIDENT, ANNOUNCEMENT_CONTENTS, 
+			ANNOUNCEMENT_CLICKS, ANNOUNCEMENT_CREATE_DATE, ANNOUNCEMENT_UPDATE_DATE
+		FROM 
+			TB_ANNOUNCEMENT
+		WHERE 1 = 1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			<choose>
+	            <when test="searchCondition == 0">
+					AND	ANNOUNCEMENT_NAME LIKE '%' || #{searchKeyword} || '%'
+				</when>
+	            <when test="searchCondition == 1">
+					AND	ANNOUNCEMENT_CONTENTS LIKE '%' || #{searchKeyword} || '%'
+				</when>
+			</choose>
+		</if>
+ 		ORDER BY ANNOUNCEMENT_NO DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+
+	<select id="selectAnnouncementListTotalCount" parameterType="defaultVO" resultType="int">
+
+			SELECT COUNT(*) ANNOUNCEMENT_NO
+			FROM TB_ANNOUNCEMENT
+			WHERE 1 = 1
+			<if test="searchKeyword != null and searchKeyword != ''">
+		        <choose>
+		            <when test="searchCondition == 0">
+						AND	ANNOUNCEMENT_NAME LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 1">
+						AND	ANNOUNCEMENT_CONTENTS LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+	</select>
+	
+	<select id="selectAnnouncement" resultMap="tbAnnouncementVO">
+		
+		SELECT	
+			ANNOUNCEMENT_NO, MEMBER_NO, APT_ZONE_CODE, ANNOUNCEMENT_NAME,
+			ANNOUNCEMENT_START, ANNOUNCEMENT_END, ANNOUNCEMENT_ADDRESS,
+			ANNOUNCEMENT_AREA, ANNOUNCEMENT_ALLRESIDENT, ANNOUNCEMENT_CONTENTS,
+			ANNOUNCEMENT_CLICKS, ANNOUNCEMENT_CREATE_DATE, ANNOUNCEMENT_UPDATE_DATE
+		FROM 
+			TB_ANNOUNCEMENT
+		WHERE 
+			ANNOUNCEMENT_NO = #{announcementNo}
+			
+	</select>
+	
+	<delete id="deleteAnnouncement">
+		DELETE FROM TB_ANNOUNCEMENT WHERE ANNOUNCEMENT_NO = #{announcementNo}
+	
+	</delete>
+	
+	
+		<insert id="insertAnnouncement" parameterType="tbAnnouncementVO">
+			<![CDATA[
+			INSERT INTO TB_ANNOUNCEMENT
+				( 
+					MEMBER_NO  
+				  , APT_ZONE_CODE
+				  , ANNOUNCEMENT_NAME
+				  , ANNOUNCEMENT_START
+				  , ANNOUNCEMENT_END
+				  , ANNOUNCEMENT_ADDRESS
+				  , ANNOUNCEMENT_AREA
+				  , ANNOUNCEMENT_ALLRESIDENT
+				  , ANNOUNCEMENT_CONTENTS
+				  , ANNOUNCEMENT_CLICKS
+				  , ANNOUNCEMENT_CREATE_DATE
+				  , ANNOUNCEMENT_UPDATE_DATE
+				  )
+			VALUES ( 
+					1
+				  , #{aptZoneCode}
+				  , #{announcementName}
+				  , #{announcementStart}
+				  , #{announcementEnd} 
+				  , #{announcementAddress}
+				  , #{announcementArea}
+				  , #{announcementAllResident}
+				  , #{announcementContents}
+				  , 0
+				  , now()
+				  , now()
+				  )
+				 	]]> 
+	</insert>
+	
+	<update id="updateAnnouncement" parameterType="tbAnnouncementVO">
+		<![CDATA[
+			UPDATE 
+				TB_ANNOUNCEMENT
+			SET 
+				APT_ZONE_CODE = #{aptZoneCode},
+				ANNOUNCEMENT_NAME = #{announcementName},
+				ANNOUNCEMENT_START = #{announcementStart},
+				ANNOUNCEMENT_END = #{announcementEnd},
+				ANNOUNCEMENT_ADDRESS = #{announcementAddress},
+				ANNOUNCEMENT_AREA = #{announcementArea},
+				ANNOUNCEMENT_ALLRESIDENT = #{announcementAllResident},
+				ANNOUNCEMENT_CONTENTS = #{announcementContents},
+				ANNOUNCEMENT_UPDATE_DATE = now()
+			WHERE 
+				ANNOUNCEMENT_NO = #{announcementNo}
+					
+		]]> 
+	</update>
+	
+	<update id="selectAnnouncementClickHit" parameterType="int">
+		UPDATE
+			TB_ANNOUNCEMENT
+		SET
+			ANNOUNCEMENT_CLICKS = ANNOUNCEMENT_CLICKS + 1
+		WHERE
+			ANNOUNCEMENT_NO = #{value}
+	</update>
+
+	<select id="selectZoneCode" resultMap="tbZoneCodeVO">
+		select
+			APT_ZONE_CODE, APT_ZONE_CODE_VALUE
+		from 
+			TB_ZONE_CODE	
+	</select>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<!-- controller 어노테이션 처리, 다국어 처리, 후 처리로직 수행(예외이거나 예외가 아닐 시) 클래스 -->
+
+
+	<!-- contorller 어노테이션 페키지 지정 최상위 패키지로 적용 -->
+	<!-- <context:component-scan> = 대상이 되는 class를 자동으로 scan해서 spring bean으로 
+		등록하는 태그 -->
+		<!-- use-default-filters="false" -->
+	<context:component-scan base-package="kr.co.edsk.ojt.APTReview ,egovframework">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 다국어 처리 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<!-- <value>classpath:/egovframework/message/message-common</value> -->
+				<value>classpath:/egovframework/rte/fdl/idgnr/messages/idgnr</value>
+				<value>classpath:/egovframework/rte/fdl/property/messages/properties
+				</value>
+			</list>
+		</property>
+		<property name="cacheSeconds">
+			<value>60</value>
+		</property>
+	</bean>
+
+	<!-- Exception 이거나 Exception 이 아닌 경우에 Trace 후처리 로직을 실행 시키고자 할 때 사용 -->
+	<!-- LeaveaTrace: 예외를 발생하지않고 후처리 로직을 실행 -->
+	<!-- 어드바이징 컨트롤러 방식도 있음 -->
+	<bean id="leaveaTrace" class="egovframework.rte.fdl.cmmn.trace.LeaveaTrace">
+		<property name="traceHandlerServices">
+			<list>
+				<ref bean="traceHandlerService" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- Exception 이거나 Exception 이 아닌 경우에 Trace 후처리 로직을 실행 시키고자 할 때 사용 -->
+	<!-- DefaultTraceHandleManager클래스는 TraceHandlerService 인터페이스를 구현한 Manager 
+		이다 AbsTraceHandleManager 를 상속받고 TraceHandlerService 를 구현한 real TraceHandleManager 
+		클래스이다 실제 수행 메소드들은 거의 AbsTraceHandleManager 에서 정의 되어 있으며, trace 메소드만 재정의하여 
+		사용할 수 있다 별도의 특정 로직이 없다면 그냥 재정의 없이 사용가능하다 -->
+	<bean id="traceHandlerService" class="egovframework.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater" />
+		</property>
+		<property name="patterns">
+			<list>
+				<value>*</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="defaultTraceHandler" />
+				<!-- 예외처리 handler 참조 -->
+			</list>
+		</property>
+	</bean>
+
+	<!-- 패턴이 서로 일치하는지 확인 -->
+	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
+
+	<!-- 후 처리로직 handler -->
+	<!-- todo() 안에 실제 처리로직 구현 -->
+	<bean id="defaultTraceHandler" class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" />
+
+</beans>

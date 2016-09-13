@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<!-- 예외처리 설정파일 -->
+
+
+	<!-- expression 로 예외처리 할 패키지를 지정 -->
+	<aop:config>
+		<aop:pointcut id="serviceMethod" expression="execution(public * kr.co.edsk.ojt.APTReview.*.*.*.*(..))" />
+
+		<aop:aspect ref="exceptionTransfer">
+			<aop:after-throwing throwing="exception" pointcut-ref="serviceMethod" method="transfer" />
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 트랜잭션 처리 -->
+	<!-- 다중의 defaultExceptionHandleManager, otherExceptionHandleManager 를 등록가능 -->
+	<bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">
+		<property name="exceptionHandlerService">
+			<list>
+				<ref bean="defaultExceptionHandleManager" />
+				<ref bean="otherExceptionHandleManager" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- ExceptionHandlerService 구현클래스 -->
+	<!-- EgovSampleOthersExcepHndlr 참조 -->
+	<!-- defaultExceptionHandleManager는 setPatters(), setHandlers() 메소드로 등록된 
+		pattern 정보를 이용하여 Exception 발생 클래스와의 비교하여 ture 인 경우 handlers 에 등록된 handler를 
+		실행한다. 패턴 검사시 사용되는 pathMatcher 는 AntPathMatcher 를 이용하고 있다. -->
+	<bean id="defaultExceptionHandleManager" class="egovframework.rte.fdl.cmmn.exception.manager.DefaultExceptionHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater" />
+		</property>
+		<property name="patterns">
+			<list>
+				<!-- 예외 발생시 처리될 클래스를 지정 -->
+				<value>**impl.*Impl</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<!-- 여러개의 handlers 등록가능 -->
+				<ref bean="egovHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- ExceptionHandlerService 구현클래스 -->
+	<!-- EgovSampleOthersExcepHndlr 참조 -->
+	<!-- defaultExceptionHandleManager는 setPatters(), setHandlers() 메소드로 등록된 
+		pattern 정보를 이용하여 Exception 발생 클래스와의 비교하여 ture 인 경우 handlers 에 등록된 handler를 
+		실행한다. 패턴 검사시 사용되는 pathMatcher 는 AntPathMatcher 를 이용하고 있다. -->
+	<bean id="otherExceptionHandleManager" class="egovframework.rte.fdl.cmmn.exception.manager.DefaultExceptionHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater" />
+		</property>
+		<property name="patterns">
+			<list>
+				<value>**impl.*Impl</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="otherHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- ExceptionHandler 구현클래스 -->
+	<!-- 로그메세지를 가져옴 -->
+	<!-- slf4j-api.jar 라이브러리안에 LoggerFactory 클래스의 getILoggerFactory()로 변수 INITIALIZATION_STATE의 
+		상태를 비교한뒤 상태에 맞는값을 같은 클래스 getLogger(String name)로 리턴 LoggerFactory.getLogger(class.classca) 
+		를 사용하여 LOGGER 변수에 저장 구현된 EgovSampleExcepHndlr 클래스 안의 ocour() 사용하여 로그 메세지를 
+		얻는다 -->
+	<bean id="egovHandler" class="egovframework.example.cmmn.EgovSampleExcepHndlr" />
+	<!-- 위와동일 -->
+	<bean id="otherHandler" class="egovframework.example.cmmn.EgovSampleOthersExcepHndlr" />
+
+</beans>
