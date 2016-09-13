@@ -124,8 +124,8 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 //		후기게시판 정보 Database에 입력
 		int result = tbAptReviewMapper.insertAptReview(aptReviewVO);
 				
-//		Exception 발생시키기
-//		String test = "123456";
+//////	Exception 발생시키기
+//		String test = "12345";
 //		aptReviewVO.setAptZoneCode(test);
 //		result = tbAptReviewMapper.insertAptReview(aptReviewVO);
 //		LOGGER.info("2 INSERT :   "+result);
