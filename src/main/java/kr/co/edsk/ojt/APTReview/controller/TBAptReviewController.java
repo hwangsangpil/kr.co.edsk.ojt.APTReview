@@ -48,8 +48,7 @@ public class TBAptReviewController{
 	/** EgovPropertyService */
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
-	
-	
+
 	
 	
 	
@@ -62,13 +61,12 @@ public class TBAptReviewController{
 						Spring @mvc 이후에는 Model or ModelMap를 사용한다.
 	 * @return "aptreview/aptReviewList"
 	 * @exception Exception
-	 *  
 	 */
 	@RequestMapping(value = "/selectAptReviewList.do")
 //			<form:form commandName="defaultVO">@ModelAttribute("defaultVO")는 같아야한다
 	public String selectAptReviewList(@ModelAttribute("defaultVO") DefaultVO defaultVO, ModelMap model) throws Exception {
-//		@RequestMapping selectAptReviewList() 진입로그
-		LOGGER.info("@RequestMapping selectAptReviewList() In");
+//		@Controller selectAptReviewList() 진입로그
+		LOGGER.info("@Controller selectAptReviewList() In");
 		
 		/** 유효성 검사 */
 		/** model 객체 */
@@ -112,74 +110,77 @@ public class TBAptReviewController{
 				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
 			}
 			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex > 0){
-				LOGGER.info("pageIndex == 0 || pageIndex > 0");
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
 			}
 			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit > 0){
-				LOGGER.info("pageUnit == 0 || pageUnit > 0");
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
 			}
 			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize > 0){
-				LOGGER.info("pageSize == 0 || pageSize > 0");
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
 			}
 			/** firstIndex */
-			if(firstIndex == 0 || firstIndex > 0){
-				LOGGER.info("firstIndex == 0 || firstIndex > 0");
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
 			}
 			/** lastIndex */
-			if(lastIndex == 0 || lastIndex > 0){
-				LOGGER.info("lastIndex == 0 || lastIndex > 0");
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
 			}
 			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage > 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage > 0");
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
 		
+			/** pageing setting */
+			
 			/** 페이지갯수 */
 			defaultVO.setPageUnit(propertiesService.getInt("pageUnit"));
 			/** 페이지사이즈 */
 			defaultVO.setPageSize(propertiesService.getInt("pageSize"));
 	
-			/** pageing setting */
 			PaginationInfo paginationInfo = new PaginationInfo();
-	//		현재 페이지 번호를 저장
+//			현재 페이지 번호를 저장
 			paginationInfo.setCurrentPageNo(pageIndex);
-	//		한 페이지에 해당되는 게시물 갯수 저장
+			
+//			한 페이지에 해당되는 게시물 갯수 저장
 			paginationInfo.setRecordCountPerPage(pageUnit);
-	//		페이지 리스트에 게시되는 페이지 갯수 저장
+			
+//			페이지 리스트에 게시되는 페이지 갯수 저장
 			paginationInfo.setPageSize(pageSize);
-	
-	//		FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
-	//		FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
+			
+//			FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
+//			FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
 			defaultVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-	//											현재 페이지 번호		한 페이지에 게시되는 게시물 건수
-	//		LastIndex 공식 lastRecordIndex = getCurrentPageNo() * getRecordCountPerPage();
+			
+//											현재 페이지 번호		한 페이지에 게시되는 게시물 건수
+//			LastIndex 공식 lastRecordIndex = getCurrentPageNo() * getRecordCountPerPage();
 			defaultVO.setLastIndex(paginationInfo.getLastRecordIndex());
-	//		RecordCountPerPage 한 페이지에 게시되는 게시물 건수
+			
+//			RecordCountPerPage 한 페이지에 게시되는 게시물 건수
 			defaultVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 		
-	//		후기게시판 조회
+			
+//			후기게시판 조회
 			List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
-			
-	//		후기게시판 조회 데이터를 저장
-			model.addAttribute("selectAptReviewList", List);
-			
-	//		후기게시판 게시물 건수 조회
+//			후기게시판 게시물 건수 조회
 			int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
 			
-	//		검색된 게시물 건수 paginationInfo 객체에 저장
+//			후기게시판 조회 데이터를 저장
+			model.addAttribute("selectAptReviewList", List);
+//			검색된 게시물 건수 paginationInfo 객체에 저장
 			paginationInfo.setTotalRecordCount(totCnt);
-	
-	//		paginationInfo 데이터를 저장
+//			paginationInfo 데이터를 저장
 			model.addAttribute("paginationInfo", paginationInfo);
 		
-			LOGGER.info("@RequestMapping selectAptReviewList() Out  "+model.addAttribute("test", totCnt));
-		}	/** defaultVO 객체 유효성검사 else End */
+//			@Controller selectAptReviewList() 아웃로그
+			LOGGER.info("@Controller selectAptReviewList() Out");
 		
-	//		@RequestMapping selectAptReviewList() 아웃로그
+		}//	defaultVO 객체 유효성검사 else End
 			
-	//		조회 화면으로 이동
+//			조회 화면으로 이동
 			return "aptreview/aptReviewList";
 	}
 	
@@ -196,8 +197,8 @@ public class TBAptReviewController{
 	 */
 	@RequestMapping(value = "/insertAptReviewForm.do")
 	public String insertAptReviewForm(DefaultVO defaultVO, ModelMap model) throws Exception {
-//		@RequestMapping insertAptReviewForm() 진입로그
-		LOGGER.info("@RequestMapping insertAptReviewForm() In");
+//		@Controller insertAptReviewForm() 진입로그
+		LOGGER.info("@Controller insertAptReviewForm() In");
 		
 		/** 유효성 검사 */
 		/** model 객체 */
@@ -241,47 +242,46 @@ public class TBAptReviewController{
 				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
 			}
 			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex > 0){
-				LOGGER.info("pageIndex == 0 || pageIndex > 0");
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
 			}
 			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit > 0){
-				LOGGER.info("pageUnit == 0 || pageUnit > 0");
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
 			}
 			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize > 0){
-				LOGGER.info("pageSize == 0 || pageSize > 0");
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
 			}
 			/** firstIndex */
-			if(firstIndex == 0 || firstIndex > 0){
-				LOGGER.info("firstIndex == 0 || firstIndex > 0");
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
 			}
 			/** lastIndex */
-			if(lastIndex == 0 || lastIndex > 0){
-				LOGGER.info("lastIndex == 0 || lastIndex > 0");
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
 			}
 			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage > 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage > 0");
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
-		}	
-		/** defaultVO 객체 유효성검사 else End */
+		}//	defaultVO 객체 유효성검사 else End
+		
 		TBZoneCodeVO zoneCodeVO = new TBZoneCodeVO();
 		List<TBZoneCodeVO> zoneCodeVOList = tbAptReviewService.selectZoneCode(zoneCodeVO);
-		LOGGER.info("insertAptReviewForm() Out@@"+zoneCodeVOList);
-		model.addAttribute("zoneCodeVO", zoneCodeVOList);
 		
 		TBBlockCodeVO blockCodeVO = new TBBlockCodeVO();
 		TBBlockCodeVO blockCodeVOList = tbAptReviewService.selectBlockCode(blockCodeVO);
-		LOGGER.info("insertAptReviewForm() Out@@@@"+blockCodeVOList);
+		
+//		지역 정보 저장
+		model.addAttribute("zoneCodeVO", zoneCodeVOList);
+//		단지 정보 저장
 		model.addAttribute("blockCodeVO", blockCodeVOList);		
-		
-		
 //		페이지 정보 저장
 		model.addAttribute("defaultVO", defaultVO);
 		
-//		@RequestMapping insertAptReviewForm() 아웃로그
-		LOGGER.info("insertAptReviewForm() Out");
+//		@Controller insertAptReviewForm() 아웃로그
+		LOGGER.info("@Controller insertAptReviewForm() Out");
 		
 //		등록페이지 이동
 		return "aptreview/aptReviewRegister";
@@ -302,8 +302,8 @@ public class TBAptReviewController{
 	 */
 	@RequestMapping(value = "/insertAptReview.do", method = RequestMethod.POST)
 	public String insertAptReview(DefaultVO defaultVO, ModelMap model, TBAptReviewVO aptReviewVO) throws Exception {
-//		@RequestMapping insertAptReview() 진입로그
-		LOGGER.info("@RequestMapping insertAptReview() In");
+//		@Controller insertAptReview() 진입로그
+		LOGGER.info("@Controller insertAptReview() In");
 		
 		/** 유효성 검사 */
 		/** model 객체 */
@@ -347,40 +347,126 @@ public class TBAptReviewController{
 				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
 			}
 			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex > 0){
-				LOGGER.info("pageIndex == 0 || pageIndex > 0");
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
 			}
 			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit > 0){
-				LOGGER.info("pageUnit == 0 || pageUnit > 0");
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
 			}
 			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize > 0){
-				LOGGER.info("pageSize == 0 || pageSize > 0");
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
 			}
 			/** firstIndex */
-			if(firstIndex == 0 || firstIndex > 0){
-				LOGGER.info("firstIndex == 0 || firstIndex > 0");
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
 			}
 			/** lastIndex */
-			if(lastIndex == 0 || lastIndex > 0){
-				LOGGER.info("lastIndex == 0 || lastIndex > 0");
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
 			}
 			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage > 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage > 0");
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
-		}	
-		/** defaultVO 객체 유효성검사 else End */
+		}//	defaultVO 객체 유효성검사 else End
 		
-		/*
-		 * 
-		 * TBAptReviewVO 유효성검사해야됨
-		 * 
-		*/
+		/** aptReviewVO 객체 */
+		if(aptReviewVO==null || aptReviewVO.equals("")){
+			LOGGER.info("aptReviewVO == null || aptReviewVO.equals('')");
+		
+		}else{
+			
+			/** 후기게시판번호 */
+			int aptReviewNo = aptReviewVO.getAptReviewNo();
+			/** 작성자 */
+			int memberNo = aptReviewVO.getMemberNo();
+			/** 지역코드 */
+			String aptZoneCode = aptReviewVO.getAptZoneCode();
+			/** 단지코드 */
+			String aptBlockCode = aptReviewVO.getAptBlockCode();
+			/** 제목 */
+			String aptReviewTitle = aptReviewVO.getAptReviewTitle();
+			/** 내용 */
+			String aptReviewContent = aptReviewVO.getAptReviewContent();
+			/** 조회수 */
+			int aptReviewClick = aptReviewVO.getAptReviewClick();
+			/** 답변 게시물 그룹 */
+			int aptReviewGroup = aptReviewVO.getAptReviewGroup();
+			/** 답변 게시물 순서 */
+			int aptReviewNum = aptReviewVO.getAptReviewNum();
+			/** 답변 게시물 깊이 */
+			int aptReviewDepth = aptReviewVO.getAptReviewDepth();
+			/** 작성일 */
+			String aptReviewCreateDate = aptReviewVO.getAptReviewCreateDate();
+			/** 수정일 */
+			String aptReviewUpdateDate = aptReviewVO.getAptReviewUpdateDate();
+			
+			/** 유효성 검사 */
+			/** 후기게시판번호 */
+			if(aptReviewNo == 0 || aptReviewNo < 0){
+				LOGGER.info("aptReviewNo == 0 || aptReviewNo < 0");
+			}
+			
+			/** 작성자 */
+			if(memberNo == 0 || memberNo < 0){
+				LOGGER.info("memberNo == 0 || memberNo < 0");
+			}
+			
+			/** 지역코드 */
+			if(aptZoneCode == null || aptZoneCode.equals("")){
+				LOGGER.info("aptZoneCode == null || aptZoneCode.equals('')");
+			}
+			
+			/** 단지코드 */
+			if(aptBlockCode == null || aptBlockCode.equals("")){
+				LOGGER.info("aptBlockCode == null || aptBlockCode.equals('')");
+			}
+			
+			/** 제목 */
+			if(aptReviewTitle == null || aptReviewTitle.equals("")){
+				LOGGER.info("aptReviewTitle == null || aptReviewTitle.equals('')");
+			}
+			
+			/** 내용 */
+			if(aptReviewContent == null || aptReviewContent.equals("")){
+				LOGGER.info("aptReviewContent == null || aptReviewContent.equals('')");
+			}
+			
+			/** 조회수 */
+			if(aptReviewClick == 0 || aptReviewClick < 0){
+				LOGGER.info("aptReviewClick == 0 || aptReviewClick < 0");
+			}
+			
+			/** 답변 게시물 그룹 */
+			if(aptReviewGroup == 0 || aptReviewGroup < 0){
+				LOGGER.info("aptReviewGroup == 0 || aptReviewGroup < 0");
+			}
+			
+			/** 답변 게시물 순서 */
+			if(aptReviewNum == 0 || aptReviewNum < 0){
+				LOGGER.info("aptReviewNum == 0 || aptReviewNum < 0");
+			}
+			
+			/** 답변 게시물 깊이 */
+			if(aptReviewDepth == 0 || aptReviewDepth < 0){
+				LOGGER.info("aptReviewDepth == 0 || aptReviewDepth < 0");
+			}
+			
+			/** 작성일 */
+			if(aptReviewCreateDate == null || aptReviewCreateDate.equals("")){
+				LOGGER.info("aptReviewCreateDate == null || aptReviewCreateDate.equals('')");
+			}
+			
+			/** 수정일 */
+			if(aptReviewUpdateDate == null || aptReviewUpdateDate.equals("")){
+				LOGGER.info("aptReviewUpdateDate == null || aptReviewUpdateDate.equals('')");
+			}
+		}//	aptReviewVO 객체 유효성검사 else End
 		
 //		페이지 정보 저장
-		model.addAttribute("defaultVO", defaultVO);		
+		model.addAttribute("defaultVO", defaultVO);
 		
 //		후기게시판 게시글 데이터 입력
 		int result; 
@@ -397,8 +483,8 @@ public class TBAptReviewController{
 		if(result >= 1){
 		model.addAttribute("insertResult",result);
 
-//		@RequestMapping insertAptReview() 아웃로그
-		LOGGER.info("@RequestMapping insertAptReview() Out");
+//		@Controller insertAptReview() 아웃로그
+		LOGGER.info("@Controller insertAptReview() Out");
 		
 //		후기게시판 목록으로 이동
 		return "forward:/selectAptReviewList.do";
@@ -431,8 +517,8 @@ public class TBAptReviewController{
 
 		/** 유효성 검사 */
 		/** 현제패이지 번호 */
-		if(aptReviewNo == 0 || aptReviewNo > 0){
-			LOGGER.info("aptReviewNo == 0 || aptReviewNo > 0");
+		if(aptReviewNo == 0 || aptReviewNo < 0){
+			LOGGER.info("aptReviewNo == 0 || aptReviewNo < 0");
 		}
 		/** model 객체 */
 		if(model == null || model.equals("")){
@@ -475,28 +561,28 @@ public class TBAptReviewController{
 				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
 			}
 			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex > 0){
-				LOGGER.info("pageIndex == 0 || pageIndex > 0");
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
 			}
 			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit > 0){
-				LOGGER.info("pageUnit == 0 || pageUnit > 0");
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
 			}
 			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize > 0){
-				LOGGER.info("pageSize == 0 || pageSize > 0");
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
 			}
 			/** firstIndex */
-			if(firstIndex == 0 || firstIndex > 0){
-				LOGGER.info("firstIndex == 0 || firstIndex > 0");
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
 			}
 			/** lastIndex */
-			if(lastIndex == 0 || lastIndex > 0){
-				LOGGER.info("lastIndex == 0 || lastIndex > 0");
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
 			}
 			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage > 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage > 0");
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
 		}	
 		/** defaultVO 객체 유효성검사 else End */
@@ -619,28 +705,28 @@ public class TBAptReviewController{
 				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
 			}
 			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex > 0){
-				LOGGER.info("pageIndex == 0 || pageIndex > 0");
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
 			}
 			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit > 0){
-				LOGGER.info("pageUnit == 0 || pageUnit > 0");
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
 			}
 			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize > 0){
-				LOGGER.info("pageSize == 0 || pageSize > 0");
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
 			}
 			/** firstIndex */
-			if(firstIndex == 0 || firstIndex > 0){
-				LOGGER.info("firstIndex == 0 || firstIndex > 0");
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
 			}
 			/** lastIndex */
-			if(lastIndex == 0 || lastIndex > 0){
-				LOGGER.info("lastIndex == 0 || lastIndex > 0");
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
 			}
 			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage > 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage > 0");
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
 		}	
 		/** defaultVO 객체 유효성검사 else End */
@@ -677,8 +763,8 @@ public class TBAptReviewController{
 		
 		/** 유효성 검사 */
 		/** 현제패이지 번호 */
-		if(aptReviewNo == 0 || aptReviewNo > 0){
-			LOGGER.info("aptReviewNo == 0 || aptReviewNo > 0");
+		if(aptReviewNo == 0 || aptReviewNo < 0){
+			LOGGER.info("aptReviewNo == 0 || aptReviewNo < 0");
 		}
 		/** model 객체 */
 		if(model == null || model.equals("")){
@@ -721,28 +807,28 @@ public class TBAptReviewController{
 				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
 			}
 			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex > 0){
-				LOGGER.info("pageIndex == 0 || pageIndex > 0");
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
 			}
 			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit > 0){
-				LOGGER.info("pageUnit == 0 || pageUnit > 0");
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
 			}
 			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize > 0){
-				LOGGER.info("pageSize == 0 || pageSize > 0");
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
 			}
 			/** firstIndex */
-			if(firstIndex == 0 || firstIndex > 0){
-				LOGGER.info("firstIndex == 0 || firstIndex > 0");
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
 			}
 			/** lastIndex */
-			if(lastIndex == 0 || lastIndex > 0){
-				LOGGER.info("lastIndex == 0 || lastIndex > 0");
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
 			}
 			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage > 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage > 0");
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
 		}	
 		/** defaultVO 객체 유효성검사 else End */
