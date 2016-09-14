@@ -169,7 +169,7 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	 * @exception Exception
 	 */
 	@Override
-	public TBAptReviewVO selectAptReviewView(int aptReviewNo) throws Exception {
+	public List<?> selectAptReviewView(int aptReviewNo) throws Exception {
 		return tbAptReviewMapper.selectAptReviewView(aptReviewNo);
 	}
 

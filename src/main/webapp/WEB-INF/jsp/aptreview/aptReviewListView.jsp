@@ -67,7 +67,11 @@ request.setCharacterEncoding("UTF-8");
        <div class="page-content">
         <!-- commandName == @ModelAttribute(값) -->
         <form id="aptReviewListView" name= "aptReviewListView">
+        
+        <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
         <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${selectAptReviewView.aptReviewNo}"/>
+        </c:forEach>
+        
         <input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}"/>
          <div id="tab-general">
           <div class="row mbl">
@@ -75,7 +79,11 @@ request.setCharacterEncoding("UTF-8");
             <div class="row">
              <div class="col-lg-12">
               <div class="panel panel-yellow">
+              
+              <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
                <div class="panel-heading">${selectAptReviewView.aptReviewTitle}</div>
+               </c:forEach>
+               
                <div class="mbl"></div>
                <div class="col-lg-8">&nbsp;</div>
                <div class="col-lg-4">
@@ -97,11 +105,15 @@ request.setCharacterEncoding("UTF-8");
                   </thead>
                   <tbody>
                     <tr style="cursor: pointer;">
-                     <td style="text-align:center;">${selectAptReviewView.aptZoneCode}</td>
-                     <td style="text-align:center;">${selectAptReviewView.aptBlockCode}</td>
+                    <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
+                     <td style="text-align:center;">${selectAptReviewView.aptZoneCodeValue}</td>
+                     <td style="text-align:center;">${selectAptReviewView.aptBlockCodeValue}</td>
                      <td style="text-align:center;">${selectAptReviewView.aptReviewTitle}</td>
+                     </c:forEach>
                      <td style="text-align:center;">${defaultVO.pageIndex}</td>
+                     <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
                      <td style="text-align:center;">${selectAptReviewView.aptReviewContent}</td>
+                     </c:forEach>
                     </tr>
                   </tbody>
                  </table>

@@ -87,6 +87,6 @@ public interface TBAptReviewMapper {
 	 * @return 상세보기할 aptreviewVO
 	 * @exception Exception
 	 */
-	public TBAptReviewVO selectAptReviewView(int aptReviewNo) throws Exception;
+	public List<?> selectAptReviewView(int aptReviewNo) throws Exception;
 	
 }

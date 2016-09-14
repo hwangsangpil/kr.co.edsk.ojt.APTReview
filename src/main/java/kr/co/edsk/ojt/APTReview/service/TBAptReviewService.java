@@ -1,5 +1,6 @@
 package kr.co.edsk.ojt.APTReview.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import kr.co.edsk.ojt.APTReview.vo.DefaultVO;
@@ -84,7 +85,7 @@ public interface TBAptReviewService {
 	 * @return 상세보기할 aptReviewVO
 	 * @exception Exception
 	 */
-	public TBAptReviewVO selectAptReviewView(int aptReviewNo) throws Exception;
+	public List<?> selectAptReviewView(int aptReviewNo) throws Exception;
 	
 	
 }

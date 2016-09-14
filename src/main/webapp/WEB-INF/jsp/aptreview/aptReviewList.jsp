@@ -113,10 +113,10 @@ function selectAptReviewView(aptReviewNo){
                 	<%-- <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${dto.aptReviewNo}"/> --%>
                     <tr  style="cursor: pointer;" onclick="selectAptReviewView(${dto.aptReviewNo});">
                      <td style="text-align:center;">${dto.aptReviewNo}</td>
-                     <td style="text-align:center;">${dto.aptZoneCode}</td>
-                     <td style="text-align:center;">${dto.aptBlockCode}</td>
+                     <td style="text-align:center;">${dto.aptZoneCodeValue}</td>
+                     <td style="text-align:center;">${dto.aptBlockCodeValue}</td>
                      <td style="text-align:center;">${dto.aptReviewTitle}</td>
-                     <td style="text-align:center;">${dto.memberNo}</td>
+                     <td style="text-align:center;">${dto.memberName}</td>
                      <td style="text-align:center;">${dto.aptReviewCreateDate}</td>
                     </tr>
                    </c:forEach>

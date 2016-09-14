@@ -1,5 +1,6 @@
 package kr.co.edsk.ojt.APTReview.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -165,6 +166,8 @@ public class TBAptReviewController{
 			
 //			후기게시판 조회
 			List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
+			LOGGER.info("@@ list<defaultVO:   "+List);
+			LOGGER.info("@@ model.addAttribute:   "+model.addAttribute("list", List));
 //			후기게시판 게시물 건수 조회
 			int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
 			
@@ -588,10 +591,10 @@ public class TBAptReviewController{
 		/** defaultVO 객체 유효성검사 else End */
 
 //		모집공고번호 기준 데이터 조회
-		TBAptReviewVO aptReviewVO = tbAptReviewService.selectAptReviewView(aptReviewNo);
+		List<?> List = tbAptReviewService.selectAptReviewView(aptReviewNo);
 		
 //		모집공고번호 기준 데이터 저장
-		model.addAttribute("updateAptReviewForm", aptReviewVO);
+		model.addAttribute("updateAptReviewForm", List);
 		
 //		페이지 정보 저장
 		model.addAttribute("defaultVO", defaultVO);
@@ -838,10 +841,14 @@ public class TBAptReviewController{
 		LOGGER.info(""+aptReviewNo+" 번째 게시글 상세보기");
 	
 //		모집공고번호 기준 데이터 조회
-		TBAptReviewVO aptReviewVO = tbAptReviewService.selectAptReviewView(aptReviewNo);
-		
+		List<?> List = tbAptReviewService.selectAptReviewView(aptReviewNo);
+		LOGGER.info("@@List<?> List:  "+List);
+		LOGGER.info("@@List<?> List0:  "+List.get(0));
+//		LOGGER.info("@@List<?> List1:  "+List.get(1));
+//		LOGGER.info("@@List<?> List2:  "+List.get(2));
+		LOGGER.info("@@model.addAttribute:  "+model.addAttribute("List", List));
 //		모집공고번호 기준 데이터 저장
-		model.addAttribute("selectAptReviewView", aptReviewVO);
+		model.addAttribute("selectAptReviewView", List);
 
 //		페이지 정보 저장
 		model.addAttribute("defaultVO", defaultVO);

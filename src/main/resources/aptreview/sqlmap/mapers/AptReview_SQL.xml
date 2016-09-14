@@ -38,9 +38,9 @@
 
 		SELECT 
 		APT_REVIEW_NO, 
-		MEMBER_NO, 
-		APT_ZONE_CODE, 
-		APT_BLOCK_CODE, 
+		MEMBER_NAME, 
+		APT_ZONE_CODE_VALUE, 
+		APT_BLOCK_CODE_VALUE, 
 		APT_REVIEW_TITLE,
 		APT_REVIEW_CONTENTS,
 		APT_REVIEW_CLICKS,
@@ -50,7 +50,13 @@
 		date_format(APT_REVIEW_CREATE_DATE, '%Y.%m.%d') as APT_REVIEW_CREATE_DATE,
 		date_format(APT_REVIEW_UPDATE_DATE, '%Y.%m.%d') as APT_REVIEW_UPDATE_DATE
 		FROM
-		TB_APT_REVIEW
+		TB_APT_REVIEW JOIN TB_ZONE_CODE JOIN TB_BLOCK_CODE JOIN TB_MEMBER
+		WHERE 
+		TB_APT_REVIEW.APT_ZONE_CODE = TB_ZONE_CODE.APT_ZONE_CODE
+		AND 
+		TB_APT_REVIEW.APT_BLOCK_CODE = TB_BLOCK_CODE.APT_BLOCK_CODE
+		AND
+		TB_APT_REVIEW.MEMBER_NO = TB_MEMBER.MEMBER_NO
 		<!-- <if test="searchKeyword != null and searchKeyword != ''"> <choose> 
 			<when test="searchCondition == 0"> AND ID LIKE '%' || #{searchKeyword} || 
 			'%' </when> <when test="searchCondition == 1"> AND NAME LIKE '%' || #{searchKeyword} 
@@ -149,14 +155,23 @@
 		
 	</delete>
 
-	<select id="selectAptReviewView" parameterType="int" resultMap="tbAptReviewVO">
+	<select id="selectAptReviewView" parameterType="int" resultType="egovMap">
 	    
 		SELECT 
-		* 
+		APT_REVIEW_NO,
+		APT_ZONE_CODE_VALUE, 
+		APT_BLOCK_CODE_VALUE, 
+		APT_REVIEW_TITLE,
+		APT_REVIEW_CONTENTS
 		FROM 
-		TB_APT_REVIEW 
-		WHERE 
+		TB_APT_REVIEW JOIN TB_ZONE_CODE JOIN TB_BLOCK_CODE
+		WHERE
 		APT_REVIEW_NO = #{aptReviewNo}
+		AND
+		TB_APT_REVIEW.APT_ZONE_CODE = TB_ZONE_CODE.APT_ZONE_CODE
+		AND 
+		TB_APT_REVIEW.APT_BLOCK_CODE = TB_BLOCK_CODE.APT_BLOCK_CODE
+		
 	
 	</select>
 
