@@ -10,4 +10,4 @@
 		<typeAlias alias="tbZoneCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO"/>
 		<typeAlias alias="tbBlockCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO"/>
     </typeAliases>
-</configuration>
+</configuration>  

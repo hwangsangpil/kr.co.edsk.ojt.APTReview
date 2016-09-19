@@ -14,9 +14,22 @@ request.setCharacterEncoding("UTF-8");
 
 /* 입력결과 확인 */
 if('${insertResult}'>=1){
-	alert("입력이 완료 되었습니다.");
+	alert("입력을 완료 했습니다.");
 }
-	
+
+/* 수정결과 확인 */
+if('${updateResult}'>=1){
+	alert("수정을 완료 했습니다.");
+}
+
+/* 삭제결과 확인 */
+if('${deleteResult}'>=1){
+	alert("삭제를 완료 했습니다.");
+}else if('${deleteResult}'==-1){
+	alert("삭제를 실패 했습니다.");
+	/* history.back(); */
+}
+
 /* 검색 */
 function searchAptReview(){
 var searchKeyword = document.getElementById("searchKeyword").value;

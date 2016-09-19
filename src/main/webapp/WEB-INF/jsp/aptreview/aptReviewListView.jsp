@@ -12,6 +12,8 @@ request.setCharacterEncoding("UTF-8");
 <%@ include file="../include/inc_header.jsp"%>
 <script type="text/javascript">
 
+
+
 	/* 수정페이지 이동 */
 	function updateAptReview() {
 		document.aptReviewListView.method = "post";
@@ -21,9 +23,13 @@ request.setCharacterEncoding("UTF-8");
 	
 	/* 삭제 */
 	function deleteAptReview() {
-		document.aptReviewListView.method = "post";
-		document.aptReviewListView.action = "/deleteAptReview.do";
-		document.aptReviewListView.submit();
+		if (confirm("정말 삭제하시겠습니까?")){    //확인
+			document.aptReviewListView.method = "post";
+			document.aptReviewListView.action = "/deleteAptReview.do";
+			document.aptReviewListView.submit();
+		}else{
+			return;
+		}
 	}
 	
 	/* 게시글 답글등록 */
@@ -68,10 +74,10 @@ request.setCharacterEncoding("UTF-8");
         <!-- commandName == @ModelAttribute(값) -->
         <form id="aptReviewListView" name= "aptReviewListView">
         
-        <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-        <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${selectAptReviewView.aptReviewNo}"/>
+        <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${selectAptReviewView.APT_REVIEW_NO}"/>
+<%--         <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
         </c:forEach>
-        
+ --%>        
         <input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}"/>
          <div id="tab-general">
           <div class="row mbl">
@@ -80,9 +86,9 @@ request.setCharacterEncoding("UTF-8");
              <div class="col-lg-12">
               <div class="panel panel-yellow">
               
-              <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-               <div class="panel-heading">${selectAptReviewView.aptReviewTitle}</div>
-               </c:forEach>
+               <div class="panel-heading">${selectAptReviewView.APT_REVIEW_TITLE}</div>
+<%--               <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
+               </c:forEach> --%>
                
                <div class="mbl"></div>
                <div class="col-lg-8">&nbsp;</div>
@@ -105,16 +111,18 @@ request.setCharacterEncoding("UTF-8");
                   </thead>
                   <tbody>
                     <tr style="cursor: pointer;">
-                    <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-                     <td style="text-align:center;">${selectAptReviewView.aptZoneCodeValue}</td>
-                     <td style="text-align:center;">${selectAptReviewView.aptBlockCodeValue}</td>
-                     <td style="text-align:center;">${selectAptReviewView.aptReviewTitle}</td>
-                     </c:forEach>
-                     <td style="text-align:center;">${defaultVO.pageIndex}</td>
+                     <td style="text-align:center;">${selectAptReviewView.APT_ZONE_CODE_VALUE}</td>
+                     <td style="text-align:center;">${selectAptReviewView.APT_BLOCK_CODE_VALUE}</td>
+                     <td style="text-align:center;">${selectAptReviewView.APT_REVIEW_TITLE}</td>
+<%--
                      <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-                     <td style="text-align:center;">${selectAptReviewView.aptReviewContent}</td>
                      </c:forEach>
-                    </tr>
+ --%>
+                      <td style="text-align:center;">${defaultVO.pageIndex}</td>
+                     <td style="text-align:center;">${selectAptReviewView.APT_REVIEW_CONTENTS}</td>
+<%--                      <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
+                     </c:forEach>
+ --%>                    </tr>
                   </tbody>
                  </table>
                 </div>

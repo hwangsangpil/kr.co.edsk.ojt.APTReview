@@ -15,10 +15,18 @@ request.setCharacterEncoding("UTF-8");
 </style>
 
 <script>
+/* 제목 입력창에 기본 포커스 */
+$(document).ready(function(){
+	$('#aptReviewTitle').focus();
+});
+
+if('${updateResult}'==-1){
+	alert("수정 오류가 발생했습니다.");
+	history.back();
+}
 
 function clickAptZoneCode(){
 	$('#checkAptZoneCode').text("지역은 수정이 불가능합니다.");
-	alert('test');
 }
 
 function clickAptBlockCode(){
@@ -28,32 +36,54 @@ function clickAptBlockCode(){
 /* 수정 */
 function updateAptReview() {
 	
-	var aptReviewTitle = $('#aptReviewTitle').val();
-	var aptReviewContent = $('#aptReviewContent').val();
+	var aptReviewTitle = $('#aptReviewTitle').val().trim();
+	var aptReviewContent = $('#aptReviewContent').val().trim();
+	/* 특수문자 제한 */
+	re = /[~!@\#$%^&*\()\-=+_'<>]/gi;
+	/* 유효성 결과 */
+	var result = 0;
 	
-	if(aptReviewContent.length > 10){
-		$('#checkAptReviewContent').text("10자 이하로 입력 부탁드립니다.");
-	}else{
+	/* 유효성 검사결과 텍스트 초기화 */
+	/* 제목 */
+	if($('#checkAptReviewTitle').text().length > 0){
+		$('#checkAptReviewTitle').text("");
+	}
+	/* 내용 */
+	if($('#checkAptReviewContent').text().length > 0){
 		$('#checkAptReviewContent').text("");
 	}
-	if(aptReviewTitle ==' ' || aptReviewTitle == '' || aptReviewContent.length > 10){
- 		
-		if(aptReviewTitle ==' ' || aptReviewTitle == ''){
-			$('#checkAptReviewTitle').text("제목은 필수입력 항목 입니다.");
-		}else{
-			$('#checkAptReviewTitle').text("");
-		}
-		if(aptReviewContent.length > 10){
-			$('#checkAptReviewContent').text("10자 이하로 입력 부탁드립니다.");
-		}else{
-			$('#checkAptReviewContent').text("");
-		}
-		
+	
+	/* 내용에 입력된 값이 없을 시 */
+	if(aptReviewContent.length > 10){
+		$('#checkAptReviewContent').text("10자 이하로 입력 부탁드립니다.");
+		$('#aptReviewContent').focus();
+		result = 1;
+	}else if(re.test(aptReviewContent)){
+		$('#checkAptReviewContent').text("특수문자는 입력불가 항목 입니다.");	
+		$('#aptReviewContent').focus();
+		result = 1;
+	}
+	/* 제목에 입력된 값이 없을 시 */
+	if(aptReviewTitle == ''){
+		$('#checkAptReviewTitle').text("제목은 필수입력 항목 입니다.");
+		$('#aptReviewTitle').focus();
+		result = 1;
+	}else if(re.test(aptReviewTitle)){
+		$('#checkAptReviewTitle').text("특수문자는 입력불가 항목 입니다.");
+		$('#aptReviewTitle').focus();
+		result = 1;
+	}
+	
+	/* 유효성 검사결과 판단 후 동작실행 */
+	if(result == 1){
+		return false;
 	}else{
 		document.updateForm.method = "post";
 		document.updateForm.action = "/updateAptReview.do";
 		document.updateForm.submit();
-}
+	}
+
+}/* updateAptReview() End */
 
 /* 이전 상세보기 리스트 이동 */
 function selectAptReviewView(){
@@ -103,7 +133,7 @@ function hitEnterKey(e){
 	                                <div class="panel-heading">아파트 후기 수정</div>
 	                                <div class="panel-body pan">
 	                                    <form id="updateForm" name="updateForm" method="post" enctype="post">
-	                                    	<input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${updateAptReviewForm.aptReviewNo}"/>
+	                                    	<input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${updateAptReviewForm.APT_REVIEW_NO}"/>
 	                                    	<input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}">
 	                                    	<div class="form-body pal" id="test">
 	                                    			<div class="form-group">
@@ -111,9 +141,9 @@ function hitEnterKey(e){
 															지역
 															<i class="fa fa-pencil"></i>
 															 <input id="aptZoneCode"
-																name="aptZoneCode" type="text" placeholder="${updateAptReviewForm.aptZoneCode}" onclick="clickAptZoneCode()"
+																name="aptZoneCode" type="text" placeholder="${updateAptReviewForm.APT_ZONE_CODE_VALUE}" onclick="clickAptZoneCode()"
 																class="form-control" tabindex="1" onKeypress="hitEnterKey(event)" readonly  />
-																<div id=checkAptZoneCode></div>
+																<div class="checkDiv" id="checkAptZoneCode"></div>
 														</div>
 													</div>
 													<div class="form-group">
@@ -121,9 +151,9 @@ function hitEnterKey(e){
 															단지명
 															<i class="fa fa-pencil"></i>
 															 <input id="aptBlockCode"
-																name="aptBlockCode" type="text" placeholder="${updateAptReviewForm.aptBlockCode}" 
+																name="aptBlockCode" type="text" placeholder="${updateAptReviewForm.APT_BLOCK_CODE_VALUE}" onclick="clickAptBlockCode()"
 																class="form-control" tabindex="1" onKeypress="hitEnterKey(event)" readonly />
-																<div id=checkAptBlockCode></div>
+																<div class="checkDiv" id="checkAptBlockCode"></div>
 														</div>
 													</div>
 													<div class="form-group">
@@ -131,18 +161,18 @@ function hitEnterKey(e){
 															제목
 															<i class="fa fa-pencil"></i>
 															 <input id="aptReviewTitle"
-																name="aptReviewTitle" type="text" placeholder="${updateAptReviewForm.aptReviewTitle}"
+																name="aptReviewTitle" type="text" placeholder="${updateAptReviewForm.APT_REVIEW_TITLE}"
 																class="form-control" tabindex="1" onKeypress="hitEnterKey(event)" />
-																<div id=checkAptReviewTitle></div>
+																<div class="checkDiv" id="checkAptReviewTitle"></div>
 														</div>
 													</div>
 													<div class="form-group">
 														<div class="input-icon right">
 															내용
 															<i class="fa fa-balance-scale"></i> <input id="aptReviewContent"
-															name="aptReviewContent" type="text" placeholder="${updateAptReviewForm.aptReviewContent}"
+															name="aptReviewContent" type="text" placeholder="${updateAptReviewForm.APT_REVIEW_CONTENTS}"
 															class="form-control" tabindex="2" onKeypress="hitEnterKey(event)"/>
-															<div id=checkAptReviewContent></div>
+															<div class="checkDiv" id="checkAptReviewContent"></div>
 														</div>
 													</div>
 													

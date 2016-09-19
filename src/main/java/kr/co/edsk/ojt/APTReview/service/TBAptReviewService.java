@@ -69,7 +69,7 @@ public interface TBAptReviewService {
 	 * @return void형
 	 * @exception Exception
 	 */
-	public void updateAptReview(TBAptReviewVO aptReviewVO) throws Exception;
+	public int updateAptReview(TBAptReviewVO aptReviewVO) throws Exception;
 	
 	/**
 	 * 후기게시판을 삭제
@@ -77,7 +77,7 @@ public interface TBAptReviewService {
 	 * @return void형
 	 * @exception Exception
 	 */
-	public void deleteAptReview(int aptReviewNo) throws Exception;
+	public int deleteAptReview(int aptReviewNo) throws Exception;
 	
 	/**
 	 * 후기게시판 상세 보기
@@ -85,7 +85,7 @@ public interface TBAptReviewService {
 	 * @return 상세보기할 aptReviewVO
 	 * @exception Exception
 	 */
-	public List<?> selectAptReviewView(int aptReviewNo) throws Exception;
+	public HashMap<?, ?> selectAptReviewView(int aptReviewNo) throws Exception;
 	
 	
 }

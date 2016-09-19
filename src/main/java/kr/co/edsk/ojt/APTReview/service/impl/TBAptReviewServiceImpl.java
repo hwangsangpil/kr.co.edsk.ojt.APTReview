@@ -1,5 +1,6 @@
 package kr.co.edsk.ojt.APTReview.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -145,8 +146,26 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	 * @exception Exception
 	 */
 	@Override
-	public void updateAptReview(TBAptReviewVO aptReviewVO) throws Exception {
-		tbAptReviewMapper.updateAptReview(aptReviewVO);
+	public int updateAptReview(TBAptReviewVO aptReviewVO) throws Exception {
+
+//		후기게시판 정보 Database에 입력
+		int result = tbAptReviewMapper.updateAptReview(aptReviewVO);
+
+//		Exception 발생시키기
+//		int test = 500;
+//		aptReviewVO.setAptReviewNo(test);
+//		result = tbAptReviewMapper.updateAptReview(aptReviewVO);
+//		if(result == 0){
+//			LOGGER.info("updateAptReview 강제예외 발생 :   "+result);
+//			throw new Exception();
+//		}		
+		
+				
+//		입력결과 로그
+		LOGGER.info("TBAptReviewServiceImpl updateAptReview result: "+result);
+		
+//		결과값 리턴
+		return result;
 	}
 
 	
@@ -157,9 +176,26 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	 * @exception Exception
 	 */
 	@Override
-	public void deleteAptReview(int aptReviewNo) throws Exception {
-		tbAptReviewMapper.deleteAptReview(aptReviewNo);
+	public int deleteAptReview(int aptReviewNo) throws Exception {
+		
+//		후기게시판 정보 Database에 입력
+		int result = tbAptReviewMapper.deleteAptReview(aptReviewNo);
+				
+//		Exception 발생시키기
+//		aptReviewNo=500;
+//		result = tbAptReviewMapper.deleteAptReview(aptReviewNo);
+//		if(result == 0){
+//			LOGGER.info("deleteAptReview 강제예외 발생 :   "+result);
+//			throw new Exception();
+//		}
+				
+//		입력결과 로그
+		LOGGER.info("TBAptReviewServiceImpl deleteAptReview result: "+result);
+		
+//		결과값 리턴
+		return result;
 	}
+	
 
 	
 	/**
@@ -169,7 +205,7 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	 * @exception Exception
 	 */
 	@Override
-	public List<?> selectAptReviewView(int aptReviewNo) throws Exception {
+	public HashMap<?, ?> selectAptReviewView(int aptReviewNo) throws Exception {
 		return tbAptReviewMapper.selectAptReviewView(aptReviewNo);
 	}
 

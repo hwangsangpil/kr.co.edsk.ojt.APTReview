@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
-	<!-- Mapper 방식 -->
-	<mapper namespace="kr.co.edsk.ojt.APTReview.mapper.TBAptReviewMapper">
-	
-	
 	<!-- DAO 방식 -->
 	<!-- <mapper namespace="tbAptReviewDAO"> -->
+	
+	<!-- Mapper 방식 -->
+	<mapper namespace="kr.co.edsk.ojt.APTReview.mapper.TBAptReviewMapper">
 	    
+	<!-- 후기게시판 model 객체 -->
 	<resultMap id="tbAptReviewVO" type="kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO">
 		<result property="aptReviewNo" column="APT_REVIEW_NO"/>
 		<result property="memberNo" column="MEMBER_NO"/>
@@ -23,20 +23,24 @@
 		<result property="aptReviewUpdateDate" column="APT_REVIEW_UPDATE_DATE"/>
 	</resultMap>
 		
+	<!-- 지역코드 model 객체 -->
 	<resultMap id="tbZoneCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO">
 		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
 		<result property="aptZoneCodeValue" column="APT_ZONE_CODE_VALUE"/>
 	</resultMap>
 	
+	<!-- 단지코드 model 객체 -->
 	<resultMap id="tbBlockCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO">
 		<result property="aptBlockCode" column="APT_BLOCK_CODE"/>
 		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
 		<result property="aptBlockCodeValue" column="APT_BLOCK_CODE_VALUE"/>
 	</resultMap>
 	
-	<select id="selectAptReviewList" resultType="egovMap" parameterType="defaultVO">
+	
+	<!-- 후기게시판 조회 -->
+	<select id="selectAptReviewList" parameterType="defaultVO" resultType="egovMap">
 
-		SELECT 
+		SELECT
 		APT_REVIEW_NO, 
 		MEMBER_NAME, 
 		APT_ZONE_CODE_VALUE, 
@@ -67,23 +71,37 @@
 
 	</select>
 
-
-	<select id="selectAptReviewListTotalCount" resultType="int" parameterType="tbBlockCodeVO">
+	
+	<!-- 후기게시판 갯수 구하기 -->
+	<select id="selectAptReviewListTotalCount" parameterType="defaultVO" resultType="int">
 		
-	    SELECT COUNT(*) APT_REVIEW_NO FROM TB_APT_REVIEW WHERE 1=1;
+	    SELECT 
+	    COUNT(*) 
+	    APT_REVIEW_NO 
+	    FROM 
+	    TB_APT_REVIEW JOIN TB_ZONE_CODE JOIN TB_BLOCK_CODE JOIN TB_MEMBER 
+	    WHERE 
+		TB_APT_REVIEW.APT_ZONE_CODE = TB_ZONE_CODE.APT_ZONE_CODE
+		AND 
+		TB_APT_REVIEW.APT_BLOCK_CODE = TB_BLOCK_CODE.APT_BLOCK_CODE
+		AND
+		TB_APT_REVIEW.MEMBER_NO = TB_MEMBER.MEMBER_NO;
 		
 		<!-- <if test="searchKeyword != null and searchKeyword != ''"> <choose> 
 			<when test="searchCondition == 0"> AND ID LIKE '%' || #{searchKeyword} || 
 			'%' </when> <when test="searchCondition == 1"> AND NAME LIKE '%' || #{searchKeyword} 
 			|| '%' </when> </choose> </if> -->
 
-
 	</select>
 	
+	
+	<!-- 지역코드 조회 -->
 	<select id="selectZoneCode" parameterType="tbZoneCodeVO" resultMap="tbZoneCodeVO">
 	    SELECT * FROM TB_ZONE_CODE;
 	</select>
 	
+	
+	<!-- 단지코드 조회 -->
 	<select id="selectBlockCode" parameterType="tbBlockCodeVO" resultMap="tbBlockCodeVO">
 	    SELECT
 	    TB_ZONE_CODE.APT_ZONE_CODE,
@@ -99,8 +117,9 @@
 	    TB_ZONE_CODE.APT_ZONE_CODE = 'Z002';
 	</select>
 
-	<insert id="insertAptReview" keyProperty="aptReviewNo" useGeneratedKeys="true">
-	    
+	
+	<!-- 후기게시판 등록 -->
+	<insert id="insertAptReview" parameterType="tbAptReviewVO">
 	    INSERT INTO TB_APT_REVIEW 
 	 	( 
 	 	MEMBER_NO , 
@@ -132,6 +151,8 @@
 		
 	</insert>
 
+	
+	<!-- 후기게시판 수정 -->
 	<update id="updateAptReview" parameterType="tbAptReviewVO">
 	    
 	    UPDATE 
@@ -145,6 +166,8 @@
 	
 	</update>
 
+	
+	<!-- 후기게시판 삭제 -->
 	<delete id="deleteAptReview" parameterType="int"> 
 	    
 	    DELETE 
@@ -154,8 +177,10 @@
 		APT_REVIEW_NO = #{aptReviewNo};
 		
 	</delete>
-
-	<select id="selectAptReviewView" parameterType="int" resultType="egovMap">
+	
+		
+	<!-- 후기게시판 상세조회 -->
+	<select id="selectAptReviewView" parameterType="int" resultType="java.util.HashMap">
 	    
 		SELECT 
 		APT_REVIEW_NO,
@@ -172,7 +197,6 @@
 		AND 
 		TB_APT_REVIEW.APT_BLOCK_CODE = TB_BLOCK_CODE.APT_BLOCK_CODE
 		
-	
 	</select>
 
 </mapper>
