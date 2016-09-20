@@ -46,28 +46,27 @@ function ajaxSelectBox(){
             dataType: 'json',
             async: false,
             success: function(resultData) {
-            	test2(resultData);
+            	alert("성공");
+            	alert("success: "+resultData);
             },
-            error: function(xhr, status, error){
+            complete : function(resultData) {
+            	alert("실패 후");
+            	alert("complete: "+resultData);
+            },
+            error: function(xhr, status, error, resultData){
                	console.log(xhr);
                	console.log("status="+status);
                	console.log("error="+error);
             	alert("에러발생");
-            	alert(error);
+            	alert("error: "+error+" errorData: "+resultData);
             }
         }); 
-		alert("3: "+aptZoneCode);
 	}
 }
-/*             	alert("code: "+request.status+" \n "+" message: "+request.responseText+" \n "+" error: "+error); */
-
+/* 
 function test2(resultData){
 	alert("성공");
-}
-/*             dataType: "text", */
-            	/* alert("data:   "+'${test}');	
-            	alert("data2:   "+'${test.aptBlockCode}');	
-            	alert("data3:   "+'${test.aptBlockCodeValue}'');	 */
+} */
 
 
 
