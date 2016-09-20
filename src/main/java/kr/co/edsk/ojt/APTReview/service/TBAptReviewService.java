@@ -2,6 +2,7 @@ package kr.co.edsk.ojt.APTReview.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kr.co.edsk.ojt.APTReview.vo.DefaultVO;
 import kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO;
@@ -54,6 +55,9 @@ public interface TBAptReviewService {
 	 * @throws Exception
 	 */
 	public TBBlockCodeVO selectBlockCode(TBBlockCodeVO blockCodeVO) throws Exception;
+	
+	public List<TBBlockCodeVO> selectBlockCode2(Map<String, String> aptZoneCode) throws Exception;
+	
 	
 	/**
 	 * 후기게시판 작성

@@ -2,6 +2,7 @@
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,6 +11,7 @@ import kr.co.edsk.ojt.APTReview.vo.DefaultVO;
 import kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO;
 import kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO;
 import kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO;
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -1076,4 +1080,23 @@ public class TBAptReviewController{
 		return "aptreview/aptReviewListView";
 	}
 	
+	
+	
+	@RequestMapping(value = "/ajaxTest.do")
+	public @ResponseBody JSONObject ajaxTest(@RequestParam(required = false)Map<String, String> params) throws Exception{
+		LOGGER.info("@RequestMapping test() In:   "+params);
+		String test = "test";
+		JSONObject result = new JSONObject();
+		String resultCode = "";
+		String resultMsg = "";
+		Object[] args = null;
+		
+		result.put("resultCode", test);
+		
+		LOGGER.info("@RequestMapping test() Out:   "+result);
+		/*
+		List<TBBlockCodeVO> blockCodeVOList = tbAptReviewService.selectBlockCode2(aptZoneCode);
+		*/
+		 return result;
+	}
 }

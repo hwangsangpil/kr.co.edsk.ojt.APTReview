@@ -199,4 +199,16 @@
 		
 	</select>
 
+	
+	
+	<select id="selectBlockCode2" resultType="egovMap">
+	    SELECT
+	    TB_BLOCK_CODE.APT_BLOCK_CODE, APT_BLOCK_CODE_VALUE
+	    FROM
+	    TB_APT_REVIEW
+	    JOIN
+	    TB_BLOCK_CODE
+	    WHERE
+	    TB_BLOCK_CODE.APT_ZONE_CODE = #{aptZoneCode};
+	</select>
 </mapper>

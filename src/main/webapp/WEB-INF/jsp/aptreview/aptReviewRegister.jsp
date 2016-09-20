@@ -26,6 +26,50 @@ if('${insertResult}'==-1){
 	history.back();
 }
 
+function ajaxSelectBox(){
+	var aptZoneCode = $('#aptZoneCode').val();
+	var test = {aptZoneCode : aptZoneCode};
+	
+	if(aptZoneCode == -1){
+		$('#checkAptBlockCode').text("지역을 먼저 선택해주세요");
+		$('#aptZoneCode').focus();
+		return false;
+	}else {
+		if($('#checkAptBlockCode').text().length > 0){
+		$('#checkAptBlockCode').text("");
+		}
+		
+		$.ajax({
+            type: 'POST', // POST형식으로 폼 전송
+            url: '/ajaxTest.do', // 목적지
+            data: test,
+            dataType: 'json',
+            async: false,
+            success: function(resultData) {
+            	test2(resultData);
+            },
+            error: function(xhr, status, error){
+               	console.log(xhr);
+               	console.log("status="+status);
+               	console.log("error="+error);
+            	alert("에러발생");
+            	alert(error);
+            }
+        }); 
+		alert("3: "+aptZoneCode);
+	}
+}
+/*             	alert("code: "+request.status+" \n "+" message: "+request.responseText+" \n "+" error: "+error); */
+
+function test2(resultData){
+	alert("성공");
+}
+/*             dataType: "text", */
+            	/* alert("data:   "+'${test}');	
+            	alert("data2:   "+'${test.aptBlockCode}');	
+            	alert("data3:   "+'${test.aptBlockCodeValue}'');	 */
+
+
 
 /* 등록 */
 function insertAptReview(){
@@ -176,9 +220,8 @@ function hitEnterKey(e){
 														<div class="input-icon right">
 															단지명
 															<i class="fa fa-pencil"></i>
-															<select name="aptBlockCode" id="aptBlockCode" class="form-control" tabindex="2" onKeypress="hitEnterKey(event)">
+															<select name="aptBlockCode" onclick="ajaxSelectBox()" id="aptBlockCode" class="form-control" tabindex="2" onKeypress="hitEnterKey(event)">
 																<option value="-1">단지선택</option>
-																<option value="${blockCodeVO.aptBlockCode}">${blockCodeVO.aptBlockCodeValue}</option>
 															</select>
 															<div class="checkDiv" id="checkAptBlockCode"></div>
 														</div>

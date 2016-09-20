@@ -2,6 +2,7 @@ package kr.co.edsk.ojt.APTReview.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -104,6 +105,11 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 		return tbAptReviewMapper.selectBlockCode(blockCodeVO);
 	}
 	
+	public List<TBBlockCodeVO> selectBlockCode2(Map<String, String> aptZoneCode)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return tbAptReviewMapper.selectBlockCode2(aptZoneCode);
+	}
 	
 	/**
 	 * 후기게시판 작성
