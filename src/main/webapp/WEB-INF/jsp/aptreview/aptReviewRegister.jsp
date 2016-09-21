@@ -29,7 +29,7 @@ if('${insertResult}'==-1){
 function ajaxSelectBox(){
 	var aptZoneCode = $('#aptZoneCode').val();
 	var test = {aptZoneCode : aptZoneCode};
-	
+	var test2 = "aptZoneCode" + "=" + $('#aptZoneCode').val();
 	if(aptZoneCode == -1){
 		$('#checkAptBlockCode').text("지역을 먼저 선택해주세요");
 		$('#aptZoneCode').focus();
@@ -41,13 +41,18 @@ function ajaxSelectBox(){
 		
 		$.ajax({
             type: 'POST', // POST형식으로 폼 전송
-            url: '/ajaxTest.do', // 목적지
-            data: test,
+            async: true,
             dataType: 'json',
-            async: false,
+            data: {aptZoneCode : $('#aptZoneCode').val()},
+            url: '/ajaxTest.do', // 목적지
             success: function(resultData) {
-            	alert("성공");
-            	alert("success: "+resultData);
+            	if(resultData.length == 0){
+            		alert("데이터 없음");
+	            	alert("success: null");
+            	}else{
+	            	alert("성공");
+	            	alert("success: "+resultData);
+	            }
             },
             complete : function(resultData) {
             	alert("실패 후");

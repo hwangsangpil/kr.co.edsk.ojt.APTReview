@@ -14,7 +14,7 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-	<!-- 다국어 처리 -->
+	<!-- 다국어 처리 LocaleChangeInterceptor + messageSource 형식으로 가능 -->
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
 			<list>

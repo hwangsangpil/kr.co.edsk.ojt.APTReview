@@ -15,6 +15,7 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository" />
 	</context:component-scan>
 
+	
 	<!-- for controller -->
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -22,10 +23,62 @@
 			<bean class="egovframework.example.cmmn.web.EgovBindingInitializer" />
 		</property>
 	</bean>
+	
+	<!-- 
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >
+        @ResponseBody를 사용하기 위해
+        jre : jackson-core, jackson-mapper 필요
+  		<property name="messageConverters">
+   			<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
+  		</property>
+    </bean>
+	  -->
+	
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonMessageConverter"/>
+			</list>
+		</property>
+	</bean>
 
-	<!-- handlerMapping 구현클래스 -->
+	<bean id="jsonMessageConverter" class="org.springframework.http.converter.json.GsonHttpMessageConverter"></bean>
+	
+	
+	
+	
+	
+	<!-- 
+	<bean
+  class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+  <property name="messageConverters">
+   <list>
+    <ref bean="jsonConverter" />
+    
+    <ref bean="marshallingConverter" />
+    <ref bean="atomConverter" />
+   
+   </list>
+  </property>
+ </bean>
+
+ <bean id="jsonConverter"
+  class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+  <property name="supportedMediaTypes" value="application/json" />
+ </bean>
+	 -->
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 기본 handlerMapping -->
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+  		<!-- Controller가 요청을 처리하기 전,후로 특정한 로직을 수행되기 원할때 interceptors -->
 		<property name="interceptors">
 			<list>
 				<ref bean="localeChangeInterceptor" />
@@ -33,15 +86,18 @@
 		</property>
 	</bean>
 
+	
 	<!-- session 사용 locale 처리 -->
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 	<!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
 
 	<!-- locale 처리 -->
+	<!-- 다국어 처리 LocaleChangeInterceptor + messageSource 이런 형식으로 가능 -->
 	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="language" />
 	</bean>
 
+	
 	<!-- 에러 처리 -->
 	<bean
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
@@ -56,13 +112,14 @@
 		</property>
 	</bean>
 
-	<!-- 경로를 지정하여 다중의 뷰 url 처리 -->
+	
+	<!-- 경로를 지정하여 뷰 url 처리 -->
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
 
+	
 	<!-- For Pagination Tag -->
-
 	<bean id="imageRenderer" class="egovframework.example.cmmn.web.EgovImgPaginationRenderer" />
 
 	<!-- /For Pagination Tag -->
@@ -74,6 +131,9 @@
 		</property>
 	</bean>
 
+
 	<!-- 해당 URL을 매핑하고 설정한 view 리턴 -->
-	<mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator" />
+	
+	
+	
 </beans>

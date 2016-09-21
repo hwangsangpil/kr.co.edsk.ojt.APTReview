@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -1082,14 +1081,12 @@ public class TBAptReviewController{
 	}
 	
 	
+	
 	@RequestMapping(value = "/ajaxTest.do")
-	public @ResponseBody JSONObject ajaxTest(@RequestParam(required = false)Map<String, String> params) throws Exception{
+	public @ResponseBody JSONObject ajaxTest(@RequestParam Map<String, String> params) throws Exception{
 		LOGGER.info("@RequestMapping test() In:   "+params);
 		String test = "test";
 		JSONObject result = new JSONObject();
-		String resultCode = "";
-		String resultMsg = "";
-		Object[] args = null;
 		
 		result.put("resultCode", test);
 		
@@ -1097,5 +1094,8 @@ public class TBAptReviewController{
 		
 		return result;
 	}
+	/*		String resultCode = "";
+		String resultMsg = "";
+		Object[] args = null;*/
 
 }
