@@ -104,13 +104,18 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 		// TODO Auto-generated method stub
 		return tbAptReviewMapper.selectBlockCode(blockCodeVO);
 	}
-	
-	public List<TBBlockCodeVO> selectBlockCode2(Map<String, String> aptZoneCode)
+	@Override
+	public String selectBlockCode2(Map<String, String> aptZoneCode)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return tbAptReviewMapper.selectBlockCode2(aptZoneCode);
 	}
-	
+	@Override
+	public String selectBlockCodeValue(Map<String, String> aptZoneCode)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return tbAptReviewMapper.selectBlockCodeValue(aptZoneCode);
+	}
 	/**
 	 * 후기게시판 작성
 	 * @param aptReviewVO - 등록할 정보가 담긴 TBAptReviewVO

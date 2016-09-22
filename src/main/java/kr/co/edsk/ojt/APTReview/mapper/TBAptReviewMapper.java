@@ -60,7 +60,9 @@ public interface TBAptReviewMapper {
 	public TBBlockCodeVO selectBlockCode(TBBlockCodeVO blockCodeVO) throws Exception;
 	
 	
-	public List<TBBlockCodeVO> selectBlockCode2(Map<String, String> aptZoneCode) throws Exception;
+	public String selectBlockCode2(Map<String, String> aptZoneCode) throws Exception;
+	
+	public String selectBlockCodeValue(Map<String, String> aptZoneCode) throws Exception;
 	
 	/**
 	 * 후기게시판 작성

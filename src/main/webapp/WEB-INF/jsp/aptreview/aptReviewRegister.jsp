@@ -17,19 +17,17 @@ request.setCharacterEncoding("UTF-8");
 
 <script>
 /* 지역 선택창에 기본 포커스 */
-$(document).ready(function(){
-	$('#aptZoneCode').focus();
-});
+
+
 /* 입력결과 확인 */
 if('${insertResult}'==-1){
 	alert("입력 오류가 발생했습니다.");
 	history.back();
 }
 
-function ajaxSelectBox(){
+function checkAjaxSelectBox(){
 	var aptZoneCode = $('#aptZoneCode').val();
-	var test = {aptZoneCode : aptZoneCode};
-	var test2 = "aptZoneCode" + "=" + $('#aptZoneCode').val();
+	
 	if(aptZoneCode == -1){
 		$('#checkAptBlockCode').text("지역을 먼저 선택해주세요");
 		$('#aptZoneCode').focus();
@@ -38,40 +36,61 @@ function ajaxSelectBox(){
 		if($('#checkAptBlockCode').text().length > 0){
 		$('#checkAptBlockCode').text("");
 		}
+	}
+}
+
+
+
+$(document).ready(function(){
+	$('#aptZoneCode').focus();
+	
+	var select = "<option>:: 지역선택 ::</option>"; 
+	
+	$("#aptZoneCode").change(function() {			
+		if($("#aptZoneCode").val() == "-1") { // select의 value가 ""이면, "선택" 메뉴만 보여줌.
+			$("#aptBlockCode").find("option").remove().end().append("<option>:: 단지선택 ::</option>");
+		} else {
+			var aptZoneCodeValue = $(this).val();
+			ajaxSelectBox(aptZoneCodeValue);
+		}
+	});
+});
+
+function ajaxSelectBox(aptZoneCodeValue){
+	var aptZoneCode = {"aptZoneCode" : aptZoneCodeValue};
 		
 		$.ajax({
             type: 'POST', // POST형식으로 폼 전송
-            async: true,
             dataType: 'json',
-            data: {aptZoneCode : $('#aptZoneCode').val()},
+            data: aptZoneCode,
             url: '/ajaxTest.do', // 목적지
-            success: function(resultData) {
-            	if(resultData.length == 0){
-            		alert("데이터 없음");
-	            	alert("success: null");
-            	}else{
-	            	alert("성공");
-	            	alert("success: "+resultData);
-	            }
+            success: function(data) {
+            	
+				if(!data) {
+					$("#aptBlockCode").find("option").remove().end().append("<option value='" + -1 + "'>" + '단지선택' + "</option>");
+					return;
+				} else {
+					$("#aptBlockCode").find("option").remove().end().append("<option value='" + -1 + "'>" + '단지선택' + "</option>");
+					$.each(data, function(index, value) {
+						$('#aptBlockCode').append("<option value='" + index + "'>" + value + " </option>");
+					});
+				}
             },
-            complete : function(resultData) {
+            complete : function(data) {
+            	/*
             	alert("실패 후");
-            	alert("complete: "+resultData);
+            	alert("complete: "+resultData); 
+            	*/
             },
-            error: function(xhr, status, error, resultData){
+            error: function(xhr, status, error, data){
                	console.log(xhr);
                	console.log("status="+status);
                	console.log("error="+error);
             	alert("에러발생");
-            	alert("error: "+error+" errorData: "+resultData);
-            }
-        }); 
-	}
+            	alert("error: "+error+" errorData: "+data);
+			}
+     }); 
 }
-/* 
-function test2(resultData){
-	alert("성공");
-} */
 
 
 
@@ -224,7 +243,7 @@ function hitEnterKey(e){
 														<div class="input-icon right">
 															단지명
 															<i class="fa fa-pencil"></i>
-															<select name="aptBlockCode" onclick="ajaxSelectBox()" id="aptBlockCode" class="form-control" tabindex="2" onKeypress="hitEnterKey(event)">
+															<select name="aptBlockCode" id="aptBlockCode" onclick="checkAjaxSelectBox()" id="aptBlockCode" class="form-control" tabindex="2" onKeypress="hitEnterKey(event)">
 																<option value="-1">단지선택</option>
 															</select>
 															<div class="checkDiv" id="checkAptBlockCode"></div>

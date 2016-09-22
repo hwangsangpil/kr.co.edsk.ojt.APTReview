@@ -201,14 +201,21 @@
 
 	
 	
-	<select id="selectBlockCode2" resultType="egovMap">
+	<select id="selectBlockCode2" parameterType="java.util.Map" resultType="String">
 	    SELECT
-	    TB_BLOCK_CODE.APT_BLOCK_CODE, APT_BLOCK_CODE_VALUE
+	    APT_BLOCK_CODE 
 	    FROM
-	    TB_APT_REVIEW
-	    JOIN
 	    TB_BLOCK_CODE
 	    WHERE
-	    TB_BLOCK_CODE.APT_ZONE_CODE = #{aptZoneCode};
+	    APT_ZONE_CODE = #{aptZoneCode};
+	</select>
+	
+	<select id="selectBlockCodeValue" parameterType="java.util.Map" resultType="String">
+	    SELECT
+	    APT_BLOCK_CODE_VALUE
+	    FROM
+	    TB_BLOCK_CODE
+	    WHERE
+	    APT_ZONE_CODE = #{aptZoneCode};
 	</select>
 </mapper>

@@ -1079,23 +1079,55 @@ public class TBAptReviewController{
 //		상세조회 페이지 이동
 		return "aptreview/aptReviewListView";
 	}
-	
+
 	
 	
 	@RequestMapping(value = "/ajaxTest.do")
-	public @ResponseBody JSONObject ajaxTest(@RequestParam Map<String, String> params) throws Exception{
-		LOGGER.info("@RequestMapping test() In:   "+params);
-		String test = "test";
+	public @ResponseBody JSONObject ajaxTest(@RequestParam Map<String, String> aptZoneCode) throws Exception{
+		LOGGER.info("@RequestMapping test() In:   "+aptZoneCode);
+
 		JSONObject result = new JSONObject();
+		String resultCode = "";
+		String resultMsg = "";
+		Object[] args = null;
 		
-		result.put("resultCode", test);
+		String aptBlockCode = tbAptReviewService.selectBlockCode2(aptZoneCode);
+		String aptBlockCodeValue = tbAptReviewService.selectBlockCodeValue(aptZoneCode);
+		result.put(aptBlockCode, aptBlockCodeValue);
 		
 		LOGGER.info("@RequestMapping test() Out:   "+result);
 		
 		return result;
 	}
-	/*		String resultCode = "";
-		String resultMsg = "";
-		Object[] args = null;*/
 
-}
+	
+	
+//	@RequestMapping(value = "/ajaxTest.do")
+//	public @ResponseBody String ajaxTest(@RequestParam("aptZoneCode") String params) throws Exception{
+//		LOGGER.info("@RequestMapping test() In:   "+params);
+//		
+//		List<TBBlockCodeVO> result= tbAptReviewService.selectBlockCode2(params);
+//		Map<String, String> map = tbAptReviewService.selectBlockCode3(params);
+//		
+//		LOGGER.info("@RequestMapping test() Out:   "+result);
+//		LOGGER.info("@RequestMapping test() map Out:   "+map);
+//		return params;
+//	}
+	
+
+//	@RequestMapping(value = "/ajaxTest.do")
+//	public @ResponseBody TBBlockCodeVO ajaxTest(@RequestParam("aptZoneCode") TBBlockCodeVO params) throws Exception{
+//		LOGGER.info("@RequestMapping test() In:   "+params);
+//
+//		TBBlockCodeVO result = tbAptReviewService.selectBlockCode2(params);
+//		
+//		LOGGER.info("@RequestMapping test() Out:   "+result);
+//		
+//		return params;
+//	}
+	
+	
+
+
+	
+}//Controller End

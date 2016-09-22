@@ -17,63 +17,16 @@
 
 	
 	<!-- for controller -->
+	
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="webBindingInitializer">
 			<bean class="egovframework.example.cmmn.web.EgovBindingInitializer" />
 		</property>
-	</bean>
-	
-	<!-- 
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >
-        @ResponseBody를 사용하기 위해
-        jre : jackson-core, jackson-mapper 필요
-  		<property name="messageConverters">
-   			<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
-  		</property>
-    </bean>
-	  -->
-	
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="messageConverters">
-			<list>
-				<ref bean="jsonMessageConverter"/>
-			</list>
+		    <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
 		</property>
 	</bean>
-
-	<bean id="jsonMessageConverter" class="org.springframework.http.converter.json.GsonHttpMessageConverter"></bean>
-	
-	
-	
-	
-	
-	<!-- 
-	<bean
-  class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-  <property name="messageConverters">
-   <list>
-    <ref bean="jsonConverter" />
-    
-    <ref bean="marshallingConverter" />
-    <ref bean="atomConverter" />
-   
-   </list>
-  </property>
- </bean>
-
- <bean id="jsonConverter"
-  class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
-  <property name="supportedMediaTypes" value="application/json" />
- </bean>
-	 -->
-	
-	
-	
-	
-	
-	
-	
 	
 	<!-- 기본 handlerMapping -->
 	<bean
@@ -84,6 +37,7 @@
 				<ref bean="localeChangeInterceptor" />
 			</list>
 		</property>
+		
 	</bean>
 
 	
@@ -132,8 +86,7 @@
 	</bean>
 
 
-	<!-- 해당 URL을 매핑하고 설정한 view 리턴 -->
-	
-	
-	
+	<!-- 해당 URL을 매핑하고 설정한 view를 DispatcherServlet 으로 리턴 -->
+	 <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator" />
 </beans>
+
