@@ -48,7 +48,7 @@ $(document).ready(function(){
 	
 	$("#aptZoneCode").change(function() {			
 		if($("#aptZoneCode").val() == "-1") { // select의 value가 ""이면, "선택" 메뉴만 보여줌.
-			$("#aptBlockCode").find("option").remove().end().append("<option>:: 단지선택 ::</option>");
+			$("#aptBlockCode").find("option").remove().end().append("<option>단지선택</option>");
 		} else {
 			var aptZoneCodeValue = $(this).val();
 			ajaxSelectBox(aptZoneCodeValue);
@@ -61,6 +61,7 @@ function ajaxSelectBox(aptZoneCodeValue){
 		
 		$.ajax({
             type: 'POST', // POST형식으로 폼 전송
+            async: true,
             dataType: 'json',
             data: aptZoneCode,
             url: '/ajaxTest.do', // 목적지
