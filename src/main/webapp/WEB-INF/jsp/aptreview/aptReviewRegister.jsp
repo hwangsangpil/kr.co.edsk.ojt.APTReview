@@ -16,8 +16,6 @@ request.setCharacterEncoding("UTF-8");
 </style>
 
 <script>
-/* 지역 선택창에 기본 포커스 */
-
 
 /* 입력결과 확인 */
 if('${insertResult}'==-1){
@@ -25,37 +23,84 @@ if('${insertResult}'==-1){
 	history.back();
 }
 
-function checkAjaxSelectBox(){
-	var aptZoneCode = $('#aptZoneCode').val();
-	
-	if(aptZoneCode == -1){
-		$('#checkAptBlockCode').text("지역을 먼저 선택해주세요");
-		$('#aptZoneCode').focus();
-		return false;
-	}else {
-		if($('#checkAptBlockCode').text().length > 0){
-		$('#checkAptBlockCode').text("");
-		}
-	}
-}
-
-
 
 $(document).ready(function(){
+	/* 지역 선택창에 기본 포커스 */
 	$('#aptZoneCode').focus();
+	
+	/* 지역, 단지명, 제목, 내용 의 값을 변수에 저장 */
+	var aptReviewTitle = $('#aptReviewTitle').val().trim();
+	var aptReviewContent = $('#aptReviewContent').val().trim();
+	/* 특수문자 제한 */
+	re = /[~!@\#$%^&*\()\-=+_'<>]/gi;
 	
 	var select = "<option>:: 지역선택 ::</option>"; 
 	
 	$("#aptZoneCode").change(function() {			
+		
 		if($("#aptZoneCode").val() == "-1") { // select의 value가 ""이면, "선택" 메뉴만 보여줌.
-			$("#aptBlockCode").find("option").remove().end().append("<option>단지선택</option>");
+			$("#aptBlockCode").find("option").remove().end().append('<option value="' + -1 + '">' + '단지선택' + '</option>');
+			$('#checkAptZoneCode').text("지역을 선택해주세요");
+			$('#aptZoneCode').focus();
 		} else {
+			if($('#checkAptZoneCode').text().length > 0){
+				$('#checkAptZoneCode').text("");
+			}
 			var aptZoneCodeValue = $(this).val();
 			ajaxSelectBox(aptZoneCodeValue);
 		}
 	});
+	
+	$("#aptBlockCode").change(function() {			
+		if($("#aptBlockCode").val() == "-1") { // select의 value가 ""이면, "선택" 메뉴만 보여줌.
+			$('#checkAptBlockCode').text("단지를 선택해주세요");
+			$('#aptBlockCode').focus();
+		} else {
+			if($('#checkAptBlockCode').text().length > 0){
+				$('#checkAptBlockCode').text("");
+			}
+		}
+	});
+	
+	$("#aptReviewTitle").change(function() {	
+		var aptReviewTitle = $('#aptReviewTitle').val().trim();
+		/* 특수문자 제한 */
+		re = /[~!@\#$%^&*\()\-=+_'<>]/gi;
+		
+		if(aptReviewTitle == ''){
+			$('#checkAptReviewTitle').text("제목은 필수입력 항목 입니다.");
+			$('#aptReviewTitle').focus();
+		}else if(re.test(aptReviewTitle)){
+			$('#checkAptReviewTitle').text("특수문자는 입력불가 항목 입니다.");
+			$('#aptReviewTitle').focus();
+		}else {
+			if($('#checkAptReviewTitle').text().length > 0){
+				$('#checkAptReviewTitle').text("");
+			}
+		}
+	});
+	
+	$("#aptReviewContent").change(function() {	
+		var aptReviewContent = $('#aptReviewContent').val().trim();
+		/* 특수문자 제한 */
+		re = /[~!@\#$%^&*\()\-=+_'<>]/gi;
+		
+		if(aptReviewContent.length > 10){
+			$('#checkAptReviewContent').text("10자 이하로 입력 부탁드립니다.");
+			$('#aptReviewContent').focus();
+		}else if(re.test(aptReviewContent)){
+			$('#checkAptReviewContent').text("특수문자는 입력불가 항목 입니다.");	
+			$('#aptReviewContent').focus();
+		}else {
+			if($('#checkAptReviewContent').text().length > 0){
+				$('#checkAptReviewContent').text("");
+			}
+		}
+	});
+	
 });
 
+/* ajax */
 function ajaxSelectBox(aptZoneCodeValue){
 	var aptZoneCode = {"aptZoneCode" : aptZoneCodeValue};
 		
@@ -68,10 +113,10 @@ function ajaxSelectBox(aptZoneCodeValue){
             success: function(data) {
             	
 				if(!data) {
-					$("#aptBlockCode").find("option").remove().end().append("<option value='" + -1 + "'>" + '단지선택' + "</option>");
+					$("#aptBlockCode").find("option").remove().end().append('<option value="' + -1 + '">' + '단지선택' + '</option>');
 					return;
 				} else {
-					$("#aptBlockCode").find("option").remove().end().append("<option value='" + -1 + "'>" + '단지선택' + "</option>");
+					$("#aptBlockCode").find("option").remove().end().append('<option value="' + -1 + '">' + '단지선택' + '</option>');
 					$.each(data, function(index, value) {
 						$('#aptBlockCode').append("<option value='" + index + "'>" + value + " </option>");
 					});
@@ -93,7 +138,16 @@ function ajaxSelectBox(aptZoneCodeValue){
      }); 
 }
 
-
+/* 단지선택창 클릭시 지역이 선택되어 있어야함 */
+function checkAjaxSelectBox(){
+	var aptZoneCode = $('#aptZoneCode').val();
+	
+	if(aptZoneCode == -1){
+		$('#checkAptBlockCode').text("지역을 먼저 선택해주세요");
+		$('#aptZoneCode').focus();
+		return false;
+	}
+}
 
 /* 등록 */
 function insertAptReview(){
@@ -173,8 +227,7 @@ function insertAptReview(){
 		document.aptReviewRegister.submit();
 	}
 
-/* insertAptReview() End */
-}
+}/* insertAptReview() End */
 
 
 /* 취소 */
@@ -194,6 +247,7 @@ function hitEnterKey(e){
 	 	return;
 	}
 }
+
 </script>
 </head>
 <body>
@@ -228,52 +282,64 @@ function hitEnterKey(e){
 	                                    <input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}">
 	                                    	<div class="form-body pal" id="test">
 	                                    			<div class="form-group">
-														<div class="input-icon right">
-															지역
-															<i class="fa fa-pencil"></i>
+	                                    				<div style="border: 1px solid #dcdcdc; float: left; width: 10%; height: 34px; text-align:center; padding-top: 6px;">지역</div>
+														<div class="input-icon right" style="float: left; width: 90%;">
 															<select name="aptZoneCode" id="aptZoneCode" class="form-control" tabindex="1" onKeypress="hitEnterKey(event)">
 																<option value="-1">지역선택</option>
 																<c:forEach items="${zoneCodeVO}" var="list">
 																<option value="${list.aptZoneCode}">${list.aptZoneCodeValue}</option>
 																</c:forEach>
 															</select>
-															<div class="checkDiv" id="checkAptZoneCode"></div>
 														</div>
+														<div class="checkDiv" id="checkAptZoneCode" style=" float: left; width: 100%;"></div>
 													</div>
 													<div class="form-group">
-														<div class="input-icon right">
-															단지명
-															<i class="fa fa-pencil"></i>
+														<div style="border: 1px solid #dcdcdc; float: left; width: 10%; height: 34px; text-align:center; padding-top: 6px;">단지명</div>
+														<div class="input-icon right" style="float: left; width: 90%;">
+															
 															<select name="aptBlockCode" id="aptBlockCode" onclick="checkAjaxSelectBox()" id="aptBlockCode" class="form-control" tabindex="2" onKeypress="hitEnterKey(event)">
 																<option value="-1">단지선택</option>
 															</select>
-															<div class="checkDiv" id="checkAptBlockCode"></div>
 														</div>
+														<div class="checkDiv" id="checkAptBlockCode" style="float: left; width: 100%;" ></div>
 													</div>
 													<div class="form-group">
-														<div class="input-icon right">
-															제목
+														<div style="border: 1px solid #dcdcdc; float: left; width: 10%; height: 34px; text-align:center; padding-top: 6px;" >제목</div>
+														<div class="input-icon right" style="float: left; width: 90%;">
 															<i class="fa fa-pencil"></i><input id="aptReviewTitle"
 																name="aptReviewTitle" type="text" placeholder="제목"
 																class="form-control" tabindex="3" onKeypress="hitEnterKey(event)" />
-																<div class="checkDiv" id="checkAptReviewTitle"></div>
 														</div>
+														<div class="checkDiv" id="checkAptReviewTitle" style="float: left; width: 100%;"></div>
 													</div>
 													<div class="form-group">
-														<div class="input-icon right">
-															내용
-															<i class="fa fa-balance-scale"></i> <input id="aptReviewContent"
-																name="aptReviewContent" type="text" placeholder="내용"
+														<div style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 34px; text-align:center; padding-top: 6px;">도면도</div>
+														<div style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 34px; text-align:center; padding-top: 6px;">내용</div>
+														
+														<div class="input-icon right" style="float: left; width: 50%; height: 200px;">
+															<input style="height: 100%;" id="" name="" type="file" placeholder="도면도"
 																class="form-control" tabindex="4" onKeypress="hitEnterKey(event)"/>
-																<div class="checkDiv" id="checkAptReviewContent"></div>
 														</div>
+														<div class="input-icon right" style="float: left; width: 50%; height: 200px;">
+															<!-- 	<input style="height: 100%;" id="aptReviewContent"
+																name="aptReviewContent" type="text" placeholder="내용을 입력하세요"
+																class="form-control" tabindex="4" onKeypress="hitEnterKey(event)"/> -->
+															<textarea rows="8" cols="40" style="height: 100%; width: 100%;" id="aptReviewContent"
+																name="aptReviewContent" tabindex="4">
+															</textarea>
+														</div>
+														<div class="checkDiv" id="" style="float: left; width: 50%;"></div>
+														<div class="checkDiv" id="checkAptReviewContent" style="float: right; width: 50%;"></div>
+														
 													</div>
-													
+													<!-- 여백주기 -->
+													<div style="width: 100%;">&nbsp;</div>
+													<!-- 버튼 -->
+													<div class="form-actions text-right pal">
+													<button type="button" onclick="insertAptReview()" class="btn btn-primary" tabindex="5">등록</button>
+													<button type="button" onclick="selectAptReviewList()" class="btn btn-primary" tabindex="6">취소</button>
+													</div>
 											</div>
-												<div class="form-actions text-right pal">
-												<button type="button" onclick="insertAptReview()" class="btn btn-primary" tabindex="5">등록</button>
-												<button type="button" onclick="selectAptReviewList()" class="btn btn-primary" tabindex="6">취소</button>
-												</div>
 												
 												</form>
 									</div>
