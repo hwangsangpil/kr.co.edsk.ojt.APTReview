@@ -13,6 +13,56 @@ request.setCharacterEncoding("UTF-8");
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <style>
 /* #test{background-image: "/image/test.jpg";} */
+
+
+
+
+/* body {margin: 10px}
+.where {
+  display: block;
+  margin: 25px 15px;
+  font-size: 11px;
+  color: #000;
+  text-decoration: none;
+  font-family: verdana;
+  font-style: italic;
+}  */
+.filebox {display:inline-block; }
+
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #999;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+}
+/* 파일 필드 숨기기 */
+/*  margin: -1px; */
+.filebox input[type="file"] {  
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+ 
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}
+
+.filebox.bs3-primary label {
+  color: #fff;
+  background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+
 </style>
 
 <script>
@@ -315,12 +365,15 @@ function hitEnterKey(e){
 													<div class="form-group">
 														<div style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 34px; text-align:center; padding-top: 6px;">도면도</div>
 														<div style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 34px; text-align:center; padding-top: 6px;">내용</div>
-														
-														<div class="input-icon right" style="float: left; width: 50%; height: 200px;">
-															<input style="height: 100%;" id="" name="" type="file" placeholder="도면도"
-																class="form-control" tabindex="4" onKeypress="hitEnterKey(event)"/>
-														</div>
-														<div class="input-icon right" style="float: left; width: 50%; height: 200px;">
+
+<div class="filebox bs3-primary" style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 200px;">
+                          <label for="ex_file2">업로드</label> 
+                          <input type="file" id="ex_file2"> 
+                        </div>
+
+														 
+														 
+														<div class="input-icon right" style="border: 1px solid #dcdcdc; float: right; width: 50%; height: 200px;">
 															<!-- 	<input style="height: 100%;" id="aptReviewContent"
 																name="aptReviewContent" type="text" placeholder="내용을 입력하세요"
 																class="form-control" tabindex="4" onKeypress="hitEnterKey(event)"/> -->
