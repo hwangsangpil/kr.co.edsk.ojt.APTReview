@@ -36,6 +36,13 @@
 		<result property="aptBlockCodeValue" column="APT_BLOCK_CODE_VALUE"/>
 	</resultMap>
 	
+	<!-- 도면도코드 model 객체 -->
+	<resultMap id="tbPlanCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBPlanCodeVO">
+		<result property="aptZoneCode" column="APT_ZONE_CODE"/>
+		<result property="aptBlockCode" column="APT_BLOCK_CODE"/>
+		<result property="aptPlanCode" column="APT_PLAN_CODE"/>
+		<result property="aptPlanCodeValue" column="APT_PLAN_CODE_VALUE"/>
+	</resultMap>
 	
 	<!-- 후기게시판 조회 -->
 	<select id="selectAptReviewList" parameterType="defaultVO" resultType="egovMap">
@@ -217,5 +224,12 @@
 	    TB_BLOCK_CODE
 	    WHERE
 	    APT_ZONE_CODE = #{aptZoneCode};
+	</select>
+	
+	<select id="selectPlanCodeValue" resultType="String">
+		SELECT
+		APT_PLAN_CODE_VALUE
+		FROM
+		TB_PLAN_CODE
 	</select>
 </mapper>

@@ -1101,6 +1101,22 @@ public class TBAptReviewController{
 	}
 
 	
+	@RequestMapping(value = "/aptPlanImage.do")
+	public @ResponseBody JSONObject aptPlanImage(@RequestParam Map<String, String> aptBlockCodeValue) throws Exception{
+		LOGGER.info("@RequestMapping test() In:   "+aptBlockCodeValue);
+
+		JSONObject result = new JSONObject();
+		String resultCode = "";
+		String resultMsg = "";
+		Object[] args = null;
+		
+		String aptPlanCodeValue = tbAptReviewService.selectPlanCodeValue();
+		result.put("aptPlanCodeValue", aptPlanCodeValue);
+		
+		LOGGER.info("@RequestMapping test() Out:   "+result);
+		
+		return result;
+	}
 	
 //	@RequestMapping(value = "/ajaxTest.do")
 //	public @ResponseBody String ajaxTest(@RequestParam("aptZoneCode") String params) throws Exception{

@@ -116,6 +116,13 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 		// TODO Auto-generated method stub
 		return tbAptReviewMapper.selectBlockCodeValue(aptZoneCode);
 	}
+	
+	@Override
+	public String selectPlanCodeValue() throws Exception {
+		// TODO Auto-generated method stub
+		return tbAptReviewMapper.selectPlanCodeValue();
+	}
+	
 	/**
 	 * 후기게시판 작성
 	 * @param aptReviewVO - 등록할 정보가 담긴 TBAptReviewVO
@@ -219,5 +226,7 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	public HashMap<?, ?> selectAptReviewView(int aptReviewNo) throws Exception {
 		return tbAptReviewMapper.selectAptReviewView(aptReviewNo);
 	}
+
+
 
 }

@@ -12,23 +12,25 @@ request.setCharacterEncoding("UTF-8");
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <style>
-/* #test{background-image: "/image/test.jpg";} */
+.aptPlanCodeValue{
+	width:400px; 
+	height:390px;
+	background-image: url(images/test.jpg);
+	margin-left: 50px;
+	}
+/* 
 
+.fileButton{
+	width:16%;
+}
 
+.filebox {display:inline-block;}
 
-
-/* body {margin: 10px}
-.where {
-  display: block;
-  margin: 25px 15px;
-  font-size: 11px;
-  color: #000;
-  text-decoration: none;
-  font-family: verdana;
-  font-style: italic;
-}  */
-.filebox {display:inline-block; }
-
+.filebox.bs3-primary label {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
 
 .filebox label {
   display: inline-block;
@@ -42,26 +44,22 @@ request.setCharacterEncoding("UTF-8");
   border: 1px solid #ebebeb;
   border-bottom-color: #e2e2e2;
   border-radius: .25em;
-}
+} 
+*/
+
 /* 파일 필드 숨기기 */
-/*  margin: -1px; */
+/*   
 .filebox input[type="file"] {  
   position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
- 
+  margin: -1px;
   overflow: hidden;
   clip:rect(0,0,0,0);
   border: 0;
 }
-
-.filebox.bs3-primary label {
-  color: #fff;
-  background-color: #337ab7;
-    border-color: #2e6da4;
-}
-
+*/
 
 </style>
 
@@ -109,8 +107,13 @@ $(document).ready(function(){
 			if($('#checkAptBlockCode').text().length > 0){
 				$('#checkAptBlockCode').text("");
 			}
+			
+			var aptBlockCode = $(this).val();
+			aptPlanImage(aptBlockCode);
+			 
 		}
 	});
+	
 	
 	$("#aptReviewTitle").change(function() {	
 		var aptReviewTitle = $('#aptReviewTitle').val().trim();
@@ -148,7 +151,57 @@ $(document).ready(function(){
 		}
 	});
 	
+	/* 파일선택시 버튼 색상 변경 */
+	$('.aptPlanFile').change(function(){
+		if(window.FileReader){
+			alert('파일들어있음');
+			$('.filebox.bs3-primary label').css('background-color', 'red');
+		}
+	});
+	
 });
+
+function aptPlanImage(aptBlockCode){
+	var aptBlockCode = {"aptBlockCode" : aptBlockCode};
+		
+		$.ajax({
+            type: 'POST', // POST형식으로 폼 전송
+            async: true,
+            dataType: 'json',
+            data: aptBlockCode,
+            url: '/aptPlanImage.do', // 목적지
+            success: function(data) {
+            	
+				if(!data) {
+					alert('데이터 실패');
+					return;
+				} else {
+					alert('데이터 성공'+data);
+					
+					$("#aptPlanImage").append('<div class="' + 'aptPlanCodeValue div-sort' + '"><div class="' + 
+							'div-sort fileButton' + '"><label for="' + 'aptPlanFile1' + '">업로드</label><input type="' + 
+							'file' + '"id="' + 'aptPlanFile1' + '"class="' + 'aptPlanFile' + '"></div><div class="' + 
+							'div-sort fileButton' + '"><label for="' + 'aptPlanFile2' + '">업로드</label><input type="' + 
+							'file' + '"id="' + 'aptPlanFile2' + '"class="' + 'aptPlanFile' + '"></div><div class="' + 
+							'div-sort fileButton' + '"><label for="' + 'aptPlanFile3' + '">업로드</label><input type="' + 
+							'file' + '"id="' + 'aptPlanFile3' + '"class="' + 'aptPlanFile' + '"></div></div>');
+				}
+            },
+            complete : function(data) {
+            	/* 
+            	alert("실패 후");
+            	alert("complete: "+resultData); 
+            	 */
+            },
+            error: function(xhr, status, error, data){
+               	console.log(xhr);
+               	console.log("status="+status);
+               	console.log("error="+error);
+            	alert("에러발생");
+            	alert("error: "+error+" errorData: "+data);
+			}
+     }); 
+}
 
 /* ajax */
 function ajaxSelectBox(aptZoneCodeValue){
@@ -302,38 +355,40 @@ function hitEnterKey(e){
 </head>
 <body>
 
-	<div>
-		<!--BEGIN TOPBAR-->
-		<%@ include file="../include/inc_top.jsp"%>
-		<!--END TOPBAR-->
+<div>
+<!--BEGIN TOPBAR-->
+	<%@ include file="../include/inc_top.jsp"%>
+	<!--END TOPBAR-->
 		<div id="wrapper">
 			<!--BEGIN SIDEBAR MENU-->
-					<%@ include file="../include/inc_left_menu.jsp"%>
+			<%@ include file="../include/inc_left_menu.jsp"%>
 			<!--END SIDEBAR MENU-->
-			<div id="page-wrapper">
-				<!--BEGIN TITLE & BREADCRUMB PAGE-->
-				<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-					<div class="page-header pull-left">
-						<div class="page-title">아파트 후기 등록</div>
+				<div id="page-wrapper">
+					<!--BEGIN TITLE & BREADCRUMB PAGE-->
+					<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+						<div class="page-header pull-left">
+							<div class="page-title">아파트 후기 등록</div>
+						</div>
+						<div class="clearfix"></div>
 					</div>
-					<div class="clearfix"></div>
-				</div>
-				<!--END TITLE & BREADCRUMB PAGE-->
-				<!--BEGIN CONTENT-->
-				<div class="page-content">
-					<div id="tab-general">
-						<div class="row mbl">
-							<!-- 등록폼 -->
-							<div class="col-lg-8">
-								<div class="panel panel-green">
-	                                <div class="panel-heading">아파트 후기 등록</div>
-	                                <div class="panel-body pan">
-	                                    <form id="aptReviewRegister" name="aptReviewRegister">
-	                                    <input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}">
-	                                    	<div class="form-body pal" id="test">
-	                                    			<div class="form-group">
-	                                    				<div style="border: 1px solid #dcdcdc; float: left; width: 10%; height: 34px; text-align:center; padding-top: 6px;">지역</div>
-														<div class="input-icon right" style="float: left; width: 90%;">
+					<!--END TITLE & BREADCRUMB PAGE-->
+					<!--BEGIN CONTENT-->
+					<div class="page-content">
+						<div id="tab-general">
+							<div class="row mbl">
+								<!-- 등록폼 -->
+								<div class="col-lg-8">
+									<div class="panel panel-green">
+	                                	<div class="panel-heading">아파트 후기 등록</div>
+	                                	<div class="panel-body pan">
+	                                    	<form id="aptReviewRegister" name="aptReviewRegister">
+	                                    		<input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}">
+	                                    		<div class="form-body pal">
+	                                    		
+	                                    			<!-- 지역 -->
+	                                    			<div>
+	                                    				<div class="aptReviewRegister-item-name">지역</div>
+														<div class="aptReviewRegister-item-input">
 															<select name="aptZoneCode" id="aptZoneCode" class="form-control" tabindex="1" onKeypress="hitEnterKey(event)">
 																<option value="-1">지역선택</option>
 																<c:forEach items="${zoneCodeVO}" var="list">
@@ -341,77 +396,83 @@ function hitEnterKey(e){
 																</c:forEach>
 															</select>
 														</div>
-														<div class="checkDiv" id="checkAptZoneCode" style=" float: left; width: 100%;"></div>
+														<div class="checkDiv" id="checkAptZoneCode"></div>
 													</div>
-													<div class="form-group">
-														<div style="border: 1px solid #dcdcdc; float: left; width: 10%; height: 34px; text-align:center; padding-top: 6px;">단지명</div>
-														<div class="input-icon right" style="float: left; width: 90%;">
-															
+													
+													<!-- 단지 -->
+													<div>
+														<div class="aptReviewRegister-item-name">단지명</div>
+														<div class="aptReviewRegister-item-input">
 															<select name="aptBlockCode" id="aptBlockCode" onclick="checkAjaxSelectBox()" id="aptBlockCode" class="form-control" tabindex="2" onKeypress="hitEnterKey(event)">
 																<option value="-1">단지선택</option>
 															</select>
 														</div>
-														<div class="checkDiv" id="checkAptBlockCode" style="float: left; width: 100%;" ></div>
+														<div class="checkDiv" id="checkAptBlockCode"></div>
 													</div>
-													<div class="form-group">
-														<div style="border: 1px solid #dcdcdc; float: left; width: 10%; height: 34px; text-align:center; padding-top: 6px;" >제목</div>
-														<div class="input-icon right" style="float: left; width: 90%;">
-															<i class="fa fa-pencil"></i><input id="aptReviewTitle"
-																name="aptReviewTitle" type="text" placeholder="제목"
+													
+													<!-- 제목 -->
+													<div>
+														<div class="aptReviewRegister-item-name">제목</div>
+														<div class="input-icon right aptReviewRegister-item-input">
+															<i class="fa fa-pencil"></i>
+															<input id="aptReviewTitle" name="aptReviewTitle" type="text" placeholder="제목"
 																class="form-control" tabindex="3" onKeypress="hitEnterKey(event)" />
 														</div>
-														<div class="checkDiv" id="checkAptReviewTitle" style="float: left; width: 100%;"></div>
+														<div class="checkDiv" id="checkAptReviewTitle"></div>
 													</div>
-													<div class="form-group">
-														<div style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 34px; text-align:center; padding-top: 6px;">도면도</div>
-														<div style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 34px; text-align:center; padding-top: 6px;">내용</div>
+													
+													<!-- 도면도 -->
+													<div>
+														<div class="aptReviewRegister-item-name-same">도면도</div>
+														<div class="aptReviewRegister-item-name-same">내용</div>
 
-<div class="filebox bs3-primary" style="border: 1px solid #dcdcdc; float: left; width: 50%; height: 200px;">
-                          <label for="ex_file2">업로드</label> 
-                          <input type="file" id="ex_file2"> 
-                        </div>
-
-														 
-														 
-														<div class="input-icon right" style="border: 1px solid #dcdcdc; float: right; width: 50%; height: 200px;">
-															<!-- 	<input style="height: 100%;" id="aptReviewContent"
-																name="aptReviewContent" type="text" placeholder="내용을 입력하세요"
-																class="form-control" tabindex="4" onKeypress="hitEnterKey(event)"/> -->
-															<textarea rows="8" cols="40" style="height: 100%; width: 100%;" id="aptReviewContent"
-																name="aptReviewContent" tabindex="4">
-															</textarea>
+														<div class="filebox bs3-primary aptReviewRegister-item-name-same-left" id="aptPlanImage">
+															<!-- 
+															<div class="aptPlanCodeValue div-sort">
+																<div class="div-sort fileButton">
+																	<label for="aptPlanFile1">업로드</label>
+																	<input type="file" id="aptPlanFile1" class="aptPlanFile">
+																</div>
+																<div class="div-sort fileButton">
+																	<label for="aptPlanFile2">업로드</label>
+																	<input type="file" id="aptPlanFile2" class="aptPlanFile">
+																</div>
+																<div class="div-sort fileButton">
+																	<label for="aptPlanFile3">업로드</label>
+																	<input type="file" id="aptPlanFile3" class="aptPlanFile">
+																</div>
+															</div>
+															 -->
 														</div>
-														<div class="checkDiv" id="" style="float: left; width: 50%;"></div>
-														<div class="checkDiv" id="checkAptReviewContent" style="float: right; width: 50%;"></div>
-														
+								                        
+														<div class="aptReviewRegister-item-name-same-right">
+															<textarea id="aptReviewContent" name="aptReviewContent" tabindex="4"></textarea>
+														</div>
+														<div class="checkDiv checkDiv-left" id=""></div>
+														<div class="checkDiv checkDiv-right" id="checkAptReviewContent"></div>
 													</div>
+													
 													<!-- 여백주기 -->
-													<div style="width: 100%;">&nbsp;</div>
+													<div class="div-clear">&nbsp;</div>
+													
 													<!-- 버튼 -->
-													<div class="form-actions text-right pal">
+													<div class="form-actions text-right pal" style="background: white;">
 													<button type="button" onclick="insertAptReview()" class="btn btn-primary" tabindex="5">등록</button>
 													<button type="button" onclick="selectAptReviewList()" class="btn btn-primary" tabindex="6">취소</button>
 													</div>
-											</div>
-												
-												</form>
-									</div>
-									
-	                            </div>	
-	                        </div>
-							<!-- 여기까지 등록 폼 -->	
+												</div>
+											</form>
+											<!-- 여기까지 등록 폼 -->	
+										</div>
+	                            	</div>	
+	                        	</div>
+							</div>
 						</div>
 					</div>
+					<!--END CONTENT-->
 				</div>
-				
-				<!--END CONTENT-->
-				<!--BEGIN FOOTER-->
-				<!--END FOOTER-->
-			</div>
-			<!--END PAGE WRAPPER-->
+				<!--END PAGE WRAPPER-->
 		</div>
-	</div>
+</div>
 </body>
-
 </html>
-
