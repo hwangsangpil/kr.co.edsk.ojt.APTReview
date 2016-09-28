@@ -12,12 +12,12 @@ request.setCharacterEncoding("UTF-8");
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <style>
-.aptPlanCodeValue{
+/* .aptPlanCodeValue{
 	width:400px; 
 	height:390px;
 	background-image: url(images/test.jpg);
 	margin-left: 50px;
-	}
+	} */
 /* 
 
 .fileButton{
@@ -48,7 +48,7 @@ request.setCharacterEncoding("UTF-8");
 */
 
 /* 파일 필드 숨기기 */
-/*   
+
 .filebox input[type="file"] {  
   position: absolute;
   width: 1px;
@@ -59,7 +59,7 @@ request.setCharacterEncoding("UTF-8");
   clip:rect(0,0,0,0);
   border: 0;
 }
-*/
+
 
 </style>
 
@@ -151,13 +151,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	/* 파일선택시 버튼 색상 변경 */
-	$('.aptPlanFile').change(function(){
-		if(window.FileReader){
-			alert('파일들어있음');
-			$('.filebox.bs3-primary label').css('background-color', 'red');
-		}
-	});
+
 	
 });
 
@@ -179,13 +173,34 @@ function aptPlanImage(aptBlockCode){
 					alert('데이터 성공'+data);
 					
 					$("#aptPlanImage").append('<div class="' + 'aptPlanCodeValue div-sort' + '"><div class="' + 
-							'div-sort fileButton' + '"><label for="' + 'aptPlanFile1' + '">업로드</label><input type="' + 
-							'file' + '"id="' + 'aptPlanFile1' + '"class="' + 'aptPlanFile' + '"></div><div class="' + 
-							'div-sort fileButton' + '"><label for="' + 'aptPlanFile2' + '">업로드</label><input type="' + 
-							'file' + '"id="' + 'aptPlanFile2' + '"class="' + 'aptPlanFile' + '"></div><div class="' + 
-							'div-sort fileButton' + '"><label for="' + 'aptPlanFile3' + '">업로드</label><input type="' + 
-							'file' + '"id="' + 'aptPlanFile3' + '"class="' + 'aptPlanFile' + '"></div></div>');
+							'div-sort fileButton' + '"id="'+'aptPlanDiv1'+'"><label for="' + 'aptPlanFile1' + '">업로드</label><input type="' + 
+							'file' + '"id="' + 'aptPlanFile1' + '"class="' + 'aptPlanFile1' + '"></div><div class="' + 
+							'div-sort fileButton' + '"id="'+'aptPlanDiv2'+'"><label for="' + 'aptPlanFile2' + '">업로드</label><input type="' + 
+							'file' + '"id="' + 'aptPlanFile2' + '"class="' + 'aptPlanFile2' + '"></div><div class="' + 
+							'div-sort fileButton' + '"id="'+'aptPlanDiv3'+'"><label for="' + 'aptPlanFile3' + '">업로드</label><input type="' + 
+							'file' + '"id="' + 'aptPlanFile3' + '"class="' + 'aptPlanFile3' + '"></div></div>');
 				}
+				/* 파일선택시 버튼 색상 변경 */
+				$('.aptPlanFile1').change(function(){
+					if(window.FileReader){
+						alert('파일들어있음');
+						$('.filebox.bs3-primary #aptPlanDiv1 label').css('background-color', 'red');
+					}
+				});
+				/* 파일선택시 버튼 색상 변경 */
+				$('.aptPlanFile2').change(function(){
+					if(window.FileReader){
+						alert('파일들어있음');
+						$('.filebox.bs3-primary #aptPlanDiv2 label').css('background-color', 'red');
+					}
+				});
+				/* 파일선택시 버튼 색상 변경 */
+				$('.aptPlanFile3').change(function(){
+					if(window.FileReader){
+						alert('파일들어있음');
+						$('.filebox.bs3-primary #aptPlanDiv3 label').css('background-color', 'red');
+					}
+				});
             },
             complete : function(data) {
             	/* 
@@ -447,6 +462,10 @@ function hitEnterKey(e){
 								                        
 														<div class="aptReviewRegister-item-name-same-right">
 															<textarea id="aptReviewContent" name="aptReviewContent" tabindex="4"></textarea>
+															<!-- 
+															textarea 의 높이와 크기를 정하는 기존방법
+															rows="8" cols="40"
+															-->
 														</div>
 														<div class="checkDiv checkDiv-left" id=""></div>
 														<div class="checkDiv checkDiv-right" id="checkAptReviewContent"></div>
