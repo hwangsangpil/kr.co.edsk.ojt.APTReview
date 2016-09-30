@@ -74,6 +74,8 @@ public interface TBAptReviewMapper {
 	 */
 	public int insertAptReview(TBAptReviewVO aptReviewVO) throws Exception;
 	
+	public void insertAptReviewFile(Map<String,Object> map) throws Exception;
+	
 	/**
 	 * 후기게시판 수정
 	 * @param aptReviewVO - 수정할 정보가 담긴 TBAptReviewVO

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import kr.co.edsk.ojt.APTReview.service.TBAptReviewService;
 import kr.co.edsk.ojt.APTReview.vo.DefaultVO;
@@ -313,9 +314,9 @@ public class TBAptReviewController{
 	 * @exception Exception
 	 */
 	@RequestMapping(value = "/insertAptReview.do", method = RequestMethod.POST)
-	public String insertAptReview(DefaultVO defaultVO, ModelMap model, TBAptReviewVO aptReviewVO) throws Exception {
+	public String insertAptReview(DefaultVO defaultVO, ModelMap model, TBAptReviewVO aptReviewVO, HttpServletRequest request) throws Exception {
 //		@Controller insertAptReview() 진입로그
-		LOGGER.info("@Controller insertAptReview() In");
+		LOGGER.info("@Controller insertAptReview() In" + request);
 		
 //		유효성 검사
 		
@@ -488,7 +489,7 @@ public class TBAptReviewController{
 //		후기게시판 게시글 데이터 입력
 		int result; 
 		try{
-			result = tbAptReviewService.insertAptReview(aptReviewVO);
+			result = tbAptReviewService.insertAptReview(aptReviewVO, request);
 			LOGGER.info("TBAptReviewController insertAptReview result: "+result);
 		}catch(Exception e){
 			result = -1;

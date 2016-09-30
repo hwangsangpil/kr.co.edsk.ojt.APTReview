@@ -126,7 +126,7 @@
 
 	
 	<!-- 후기게시판 등록 -->
-	<insert id="insertAptReview" parameterType="tbAptReviewVO">
+	<insert id="insertAptReview" parameterType="tbAptReviewVO" useGeneratedKeys="true" keyProperty="aptReviewNo">
 	    INSERT INTO TB_APT_REVIEW 
 	 	( 
 	 	MEMBER_NO , 
@@ -158,6 +158,33 @@
 		
 	</insert>
 
+	<insert id="insertAptReviewFile" parameterType="hashmap">
+	    INSERT INTO TB_APT_REVIEW_FILE
+	    (
+	    	APT_REVIEW_NO,
+	    	APT_REVIEW_GROUP,
+	    	APT_REVIEW_DEPTH,
+	    	APT_REVIEW_NUM,
+	    	APT_REVIEW_SIZE,
+	    	APT_REVIEW_STORED_FILE_NAME,
+	    	APT_REVIEW_ORIGINAL_FILE_NAME,
+	    	APT_REVIEW_FILE_CREATE_DATE,
+	    	APT_REVIEW_FILE_UPDATE_DATE
+	    )
+	    VALUES
+	    (
+	    	#{APT_REVIEW_NO},
+	    	'2',
+	    	'1',
+	    	'1',
+	    	#{APT_REVIEW_SIZE},
+	    	#{APT_REVIEW_STORED_FILE_NAME},
+	    	#{APT_REVIEW_ORIGINAL_FILE_NAME},
+	    	now(),
+	    	now()
+	    );
+	    
+	</insert>
 	
 	<!-- 후기게시판 수정 -->
 	<update id="updateAptReview" parameterType="tbAptReviewVO">

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import kr.co.edsk.ojt.APTReview.vo.DefaultVO;
 import kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO;
 import kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO;
@@ -68,7 +70,7 @@ public interface TBAptReviewService {
 	 * @return void형
 	 * @exception Exception
 	 */
-	public int insertAptReview(TBAptReviewVO aptReviewVO) throws Exception;
+	public int insertAptReview(TBAptReviewVO aptReviewVO, HttpServletRequest request) throws Exception;
 
 	/**
 	 * 후기게시판 수정

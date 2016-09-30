@@ -12,40 +12,6 @@ request.setCharacterEncoding("UTF-8");
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <style>
-/* .aptPlanCodeValue{
-	width:400px; 
-	height:390px;
-	background-image: url(images/test.jpg);
-	margin-left: 50px;
-	} */
-/* 
-
-.fileButton{
-	width:16%;
-}
-
-.filebox {display:inline-block;}
-
-.filebox.bs3-primary label {
-  color: #fff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
-}
-
-.filebox label {
-  display: inline-block;
-  padding: .5em .75em;
-  color: #999;
-  font-size: inherit;
-  line-height: normal;
-  vertical-align: middle;
-  background-color: #fdfdfd;
-  cursor: pointer;
-  border: 1px solid #ebebeb;
-  border-bottom-color: #e2e2e2;
-  border-radius: .25em;
-} 
-*/
 
 /* 파일 필드 숨기기 */
 
@@ -170,34 +136,29 @@ function aptPlanImage(aptBlockCode){
 					alert('데이터 실패');
 					return;
 				} else {
-					alert('데이터 성공'+data);
-					
-					$("#aptPlanImage").append('<div class="' + 'aptPlanCodeValue div-sort' + '"><div class="' + 
+					$("#aptPlanImage").find("div").remove().end().append('<div class="' + 'aptPlanCodeValue div-sort' + '"><div class="' + 
 							'div-sort fileButton' + '"id="'+'aptPlanDiv1'+'"><label for="' + 'aptPlanFile1' + '">업로드</label><input type="' + 
-							'file' + '"id="' + 'aptPlanFile1' + '"class="' + 'aptPlanFile1' + '"></div><div class="' + 
+							'file' + '"id="' + 'aptPlanFile1' + '"class="' + 'aptPlanFile1' + '"name="'+'file1'+'"></div><div class="' + 
 							'div-sort fileButton' + '"id="'+'aptPlanDiv2'+'"><label for="' + 'aptPlanFile2' + '">업로드</label><input type="' + 
-							'file' + '"id="' + 'aptPlanFile2' + '"class="' + 'aptPlanFile2' + '"></div><div class="' + 
+							'file' + '"id="' + 'aptPlanFile2' + '"class="' + 'aptPlanFile2' + '"name="'+'file2'+'"></div><div class="' + 
 							'div-sort fileButton' + '"id="'+'aptPlanDiv3'+'"><label for="' + 'aptPlanFile3' + '">업로드</label><input type="' + 
-							'file' + '"id="' + 'aptPlanFile3' + '"class="' + 'aptPlanFile3' + '"></div></div>');
+							'file' + '"id="' + 'aptPlanFile3' + '"class="' + 'aptPlanFile3' + '"name="'+'file3'+'"></div></div>');
 				}
 				/* 파일선택시 버튼 색상 변경 */
 				$('.aptPlanFile1').change(function(){
 					if(window.FileReader){
-						alert('파일들어있음');
 						$('.filebox.bs3-primary #aptPlanDiv1 label').css('background-color', 'red');
 					}
 				});
 				/* 파일선택시 버튼 색상 변경 */
 				$('.aptPlanFile2').change(function(){
 					if(window.FileReader){
-						alert('파일들어있음');
 						$('.filebox.bs3-primary #aptPlanDiv2 label').css('background-color', 'red');
 					}
 				});
 				/* 파일선택시 버튼 색상 변경 */
 				$('.aptPlanFile3').change(function(){
 					if(window.FileReader){
-						alert('파일들어있음');
 						$('.filebox.bs3-primary #aptPlanDiv3 label').css('background-color', 'red');
 					}
 				});
@@ -340,6 +301,7 @@ function insertAptReview(){
 	if(result == 1){
 		return false;
 	}else{
+		document.aptReviewRegister.encoding = "multipart/form-data"
 		document.aptReviewRegister.method = "post";
 		document.aptReviewRegister.action = "/insertAptReview.do";
 		document.aptReviewRegister.submit();

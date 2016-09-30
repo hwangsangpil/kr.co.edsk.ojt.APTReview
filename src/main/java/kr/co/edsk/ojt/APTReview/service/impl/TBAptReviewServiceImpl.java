@@ -1,13 +1,16 @@
 package kr.co.edsk.ojt.APTReview.service.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import kr.co.edsk.ojt.APTReview.mapper.TBAptReviewMapper;
 import kr.co.edsk.ojt.APTReview.service.TBAptReviewService;
+import kr.co.edsk.ojt.APTReview.util.FileUtils;
 import kr.co.edsk.ojt.APTReview.vo.DefaultVO;
 import kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO;
 import kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO;
@@ -16,6 +19,8 @@ import kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
@@ -62,6 +67,9 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	/** ID Generation */
 	@Resource(name = "egovIdGnrService")
 	private EgovIdGnrService egovIdGnrService;
+	
+	@Resource(name="fileUtils")
+    private FileUtils fileUtils;
 	
 	/**
 	 * 후기게시판 전체목록 보기
@@ -130,8 +138,8 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	 * @exception Exception
 	 */
 	@Override
-	public int insertAptReview(TBAptReviewVO aptReviewVO) throws Exception {
-
+	public int insertAptReview(TBAptReviewVO aptReviewVO, HttpServletRequest request) throws Exception {
+		
 //		로그인된 사용자의 일련번호로 작성자를 자동입력하기 위한 테스트
 //		작성자 번호 임의지정
 //		memberNO 값으로 로그인 일련번호를 넣어준다 
@@ -142,15 +150,35 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 		
 //		후기게시판 정보 Database에 입력
 		int result = tbAptReviewMapper.insertAptReview(aptReviewVO);
-				
+		int aptReviewNo = aptReviewVO.getAptReviewNo();		
+		
 //		Exception 발생시키기
 //		String test = "12345";
 //		aptReviewVO.setAptZoneCode(test);
 //		result = tbAptReviewMapper.insertAptReview(aptReviewVO);
 //		LOGGER.info("2 INSERT :   "+result);
-				
+		
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+	    Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+	    MultipartFile multipartFile = null;
+	    while(iterator.hasNext()){
+	        multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+	        if(multipartFile.isEmpty() == false){
+	        	LOGGER.info("------------- file start -------------");
+	        	LOGGER.info("name : "+multipartFile.getName());
+	        	LOGGER.info("filename : "+multipartFile.getOriginalFilename());
+	        	LOGGER.info("size : "+multipartFile.getSize());
+	        	LOGGER.info("-------------- file end --------------\n");
+	        }
+	    }
+		
+	    List<Map<String,Object>> list = fileUtils.parseInsertFileInfo(aptReviewNo, request);
+		    for(int i=0, size=list.size(); i<size; i++){
+		    	tbAptReviewMapper.insertAptReviewFile(list.get(i));
+	        }
+	    
 //		입력결과 로그
-		LOGGER.info("TBAptReviewServiceImpl insertAptReview result: "+result);
+		LOGGER.info("TBAptReviewServiceImpl insertAptReview result: "+result+" --- :"+aptReviewNo);
 		
 //		결과값 리턴
 		return result;
