@@ -107,6 +107,13 @@
 	    SELECT * FROM TB_ZONE_CODE;
 	</select>
 	
+	<select id="selectReplyZoneCode" parameterType="String" resultType="java.util.Map">
+	    SELECT * FROM TB_ZONE_CODE WHERE APT_ZONE_CODE = #{aptZoneCode};
+	</select>
+	
+	<select id="selectReplyBlockCode" parameterType="String" resultType="java.util.Map">
+	    SELECT * FROM TB_BLOCK_CODE WHERE APT_BLOCK_CODE = #{aptBlockCode};
+	</select>
 	
 	<!-- 단지코드 조회 -->
 	<select id="selectBlockCode" parameterType="tbBlockCodeVO" resultMap="tbBlockCodeVO">
@@ -136,8 +143,8 @@
 		APT_REVIEW_CONTENTS, 
 		APT_REVIEW_CLICKS, 
 		APT_REVIEW_GROUP,
+		APT_REVIEW_DEPTH,
 		APT_REVIEW_NUM, 
-		APT_REVIEW_DEPTH, 
 		APT_REVIEW_CREATE_DATE,
 		APT_REVIEW_UPDATE_DATE 
 		) 
@@ -148,10 +155,10 @@
 		(SELECT APT_BLOCK_CODE FROM TB_BLOCK_CODE WHERE APT_BLOCK_CODE = #{aptBlockCode}), 
 		#{aptReviewTitle},
 		#{aptReviewContent}, 
+		'0', 
+		(SELECT * FROM (SELECT MAX(LAST_INSERT_ID(APT_REVIEW_NO)+1) FROM TB_APT_REVIEW) AS TEMP), 
 		'1', 
-		'2', 
-		'1', 
-		'1', 
+		'0', 
 		now(), 
 		now() 
 		);
@@ -174,8 +181,8 @@
 	    VALUES
 	    (
 	    	#{APT_REVIEW_NO},
-	    	'2',
-	    	'1',
+	    	(SELECT APT_REVIEW_GROUP FROM TB_APT_REVIEW WHERE APT_REVIEW_NO = #{APT_REVIEW_NO}),
+	    	'0',
 	    	'1',
 	    	#{APT_REVIEW_SIZE},
 	    	#{APT_REVIEW_STORED_FILE_NAME},
@@ -253,10 +260,25 @@
 	    APT_ZONE_CODE = #{aptZoneCode};
 	</select>
 	
+	<!-- 도면도코드 구하기 -->
 	<select id="selectPlanCodeValue" resultType="String">
 		SELECT
 		APT_PLAN_CODE_VALUE
 		FROM
 		TB_PLAN_CODE
+	</select>
+	
+	<select id="selectAptReviewReply" parameterType="int" resultType="java.util.Map">
+	    SELECT
+	    APT_REVIEW_NO,
+	    APT_ZONE_CODE,
+	    APT_BLOCK_CODE,
+	    APT_REVIEW_TITLE,
+	    APT_REVIEW_GROUP,
+	    APT_REVIEW_NUM,
+	    APT_REVIEW_DEPTH
+	    FROM
+	    TB_APT_REVIEW
+	    WHERE APT_REVIEW_NO = #{aptReviewNo};
 	</select>
 </mapper>

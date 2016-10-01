@@ -255,6 +255,24 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 		return tbAptReviewMapper.selectAptReviewView(aptReviewNo);
 	}
 
+	@Override
+	public Map<String, String> selectAptReviewReply(int aptReviewNo)
+			throws Exception {
+		return tbAptReviewMapper.selectAptReviewReply(aptReviewNo);
+	}
+
+	@Override
+	public Map<String, String> selectReplyZoneCode(String aptZoneCode)
+			throws Exception {
+		return tbAptReviewMapper.selectReplyZoneCode(aptZoneCode);
+	}
+
+	@Override
+	public Map<String, String> selectReplyBlockCode(String aptBlockCode)
+			throws Exception {
+		return tbAptReviewMapper.selectReplyBlockCode(aptBlockCode);
+	}
+
 
 
 }

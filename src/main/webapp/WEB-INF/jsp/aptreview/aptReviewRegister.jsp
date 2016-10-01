@@ -50,7 +50,7 @@ $(document).ready(function(){
 	
 	var select = "<option>:: 지역선택 ::</option>"; 
 	
-	$("#aptZoneCode").change(function() {			
+	$("#aptZoneCode").change(function() {
 		
 		if($("#aptZoneCode").val() == "-1") { // select의 value가 ""이면, "선택" 메뉴만 보여줌.
 			$("#aptBlockCode").find("option").remove().end().append('<option value="' + -1 + '">' + '단지선택' + '</option>');

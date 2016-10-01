@@ -83,7 +83,7 @@ function selectAptReviewView(aptReviewNo){
        <div class="page-content">
         <!-- commandName == @ModelAttribute(값) -->
         <form:form commandName="defaultVO"  name="aptReviewList" method="post">
-        <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="0"/>
+        <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="0">
          <div id="tab-general">
           <div class="row mbl">
            <div class="col-lg-12">

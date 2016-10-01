@@ -100,4 +100,9 @@ public interface TBAptReviewMapper {
 	 */
 	public HashMap<?, ?> selectAptReviewView(int aptReviewNo) throws Exception;
 	
+	public Map<String,String> selectAptReviewReply(int aptReviewNo) throws Exception;
+	
+	public Map<String,String> selectReplyZoneCode(String aptZoneCode) throws Exception;
+	
+	public Map<String,String> selectReplyBlockCode(String aptBlockCode) throws Exception;
 }

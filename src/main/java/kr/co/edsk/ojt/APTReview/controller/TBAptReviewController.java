@@ -279,19 +279,18 @@ public class TBAptReviewController{
 				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
 			}
 		}//	defaultVO 객체 유효성검사 else End
-		
-		TBZoneCodeVO zoneCodeVO = new TBZoneCodeVO();
-		List<TBZoneCodeVO> zoneCodeVOList = tbAptReviewService.selectZoneCode(zoneCodeVO);
-		
-		TBBlockCodeVO blockCodeVO = new TBBlockCodeVO();
-		TBBlockCodeVO blockCodeVOList = tbAptReviewService.selectBlockCode(blockCodeVO);
-		
-//		지역 정보 저장
-		model.addAttribute("zoneCodeVO", zoneCodeVOList);
-//		단지 정보 저장
-		model.addAttribute("blockCodeVO", blockCodeVOList);		
-//		페이지 정보 저장
-		model.addAttribute("defaultVO", defaultVO);
+			TBZoneCodeVO zoneCodeVO = new TBZoneCodeVO();
+			List<TBZoneCodeVO> zoneCodeVOList = tbAptReviewService.selectZoneCode(zoneCodeVO);
+			
+			TBBlockCodeVO blockCodeVO = new TBBlockCodeVO();
+			TBBlockCodeVO blockCodeVOList = tbAptReviewService.selectBlockCode(blockCodeVO);
+			
+//			지역 정보 저장
+			model.addAttribute("zoneCodeVO", zoneCodeVOList);
+//			단지 정보 저장
+			model.addAttribute("blockCodeVO", blockCodeVOList);		
+//			페이지 정보 저장
+			model.addAttribute("defaultVO", defaultVO);
 		
 //		@Controller insertAptReviewForm() 아웃로그
 		LOGGER.info("@Controller insertAptReviewForm() Out");
@@ -519,6 +518,328 @@ public class TBAptReviewController{
 	
 	
 	
+	/**
+	 * 후기게시판 답변 작성페이지 조회한다.
+	 * @param defaultVO - 목록 조회조건 정보가 담긴 VO
+	 * @param model
+	 * @return "aptReviewRegister"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "/insertAptReviewReplyForm.do")
+	public String insertAptReviewReplyForm(DefaultVO defaultVO, ModelMap model, int aptReviewNo) throws Exception {
+//		@Controller insertAptReviewReplyForm() 진입로그
+		LOGGER.info("@Controller insertAptReviewReplyForm() In:  "+ aptReviewNo);
+		
+//		유효성 검사
+		
+		/** model 객체 */
+		if(model == null || model.equals("")){
+			LOGGER.info("model == null || model.equals('')");
+		}
+		/** defaultVO 객체 */
+		if(defaultVO == null || defaultVO.equals("")){
+			LOGGER.info("defaultVO == null || defaultVO.equals('')");
+		}else{
+			/** 검색조건 */
+			String searchCondition = defaultVO.getSearchCondition();
+			/** 검색Keyword */
+			String searchKeyword = defaultVO.getSearchKeyword();
+			/** 검색사용여부 */
+			String searchUseYn = defaultVO.getSearchUseYn();
+			/** 현재페이지 */
+			int pageIndex = defaultVO.getPageIndex();
+			/** 페이지갯수 */
+			int pageUnit = defaultVO.getPageUnit();
+			/** 페이지사이즈 */
+			int pageSize = defaultVO.getPageSize();
+			/** firstIndex */
+			int firstIndex = defaultVO.getFirstIndex();
+			/** lastIndex */
+			int lastIndex = defaultVO.getLastIndex();
+			/** recordCountPerPage */
+			int recordCountPerPage = defaultVO.getRecordCountPerPage();
+			
+//			유효성 검사
+			
+			/** 검색조건 */
+			if(searchCondition == null || searchCondition.equals("")){
+				LOGGER.info("searchCondition == null || searchCondition.equals('')");
+			}
+			/** 검색Keyword */
+			if(searchKeyword == null || searchKeyword.equals("")){
+				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
+			}
+			/** 검색사용여부 */
+			if(searchUseYn == null || searchUseYn.equals("")){
+				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
+			}
+			/** 현재페이지 */
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
+			}
+			/** 페이지갯수 */
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
+			}
+			/** 페이지사이즈 */
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
+			}
+			/** firstIndex */
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
+			}
+			/** lastIndex */
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
+			}
+			/** recordCountPerPage */
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
+			}
+		}//	defaultVO 객체 유효성검사 else End
+			Map<String,String> AptReviewReplyList = tbAptReviewService.selectAptReviewReply(aptReviewNo);
+			LOGGER.info("AptReviewReplyList:    "+AptReviewReplyList);
+			String aptZoneCode = AptReviewReplyList.get("APT_ZONE_CODE");
+			Map<String,String> aptZoneCodeList = tbAptReviewService.selectReplyZoneCode(aptZoneCode);
+			
+			String aptBlockCode = AptReviewReplyList.get("APT_BLOCK_CODE");
+			Map<String,String> aptBlockCodeList = tbAptReviewService.selectReplyBlockCode(aptBlockCode);
+			
+			
+			model.addAttribute("AptReviewReplyList", AptReviewReplyList);
+//			지역 정보 저장
+			model.addAttribute("aptZoneCodeList", aptZoneCodeList);
+//			단지 정보 저장
+			model.addAttribute("aptBlockCodeList", aptBlockCodeList);		
+//			페이지 정보 저장
+			model.addAttribute("defaultVO", defaultVO);
+		
+//		@Controller insertAptReviewReplyForm() 아웃로그
+		LOGGER.info("@Controller insertAptReviewReplyForm() Out");
+		
+//		등록페이지 이동
+		return "aptreview/aptReviewReplyRegister";
+		
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 후기게시판 답글 작성
+	 * @param defaultVO - 목록 조회조건 정보가 담긴 VO
+	 * @param aptreviewVO - 등록할 정보가 담긴 VO
+	 * @param model
+	 * @return "forward:/selectAptReviewList.do"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "/insertAptReviewReply.do", method = RequestMethod.POST)
+	public String insertAptReviewReply(DefaultVO defaultVO, ModelMap model, TBAptReviewVO aptReviewVO, HttpServletRequest request) throws Exception {
+//		@Controller insertAptReviewReply() 진입로그
+		LOGGER.info("@Controller insertAptReviewReply() In" + aptReviewVO);
+		
+//		유효성 검사
+		
+		/** model 객체 */
+		if(model == null || model.equals("")){
+			LOGGER.info("model == null || model.equals('')");
+		}
+		/** defaultVO 객체 */
+		if(defaultVO == null || defaultVO.equals("")){
+			LOGGER.info("defaultVO == null || defaultVO.equals('')");
+		}else{
+			/** 검색조건 */
+			String searchCondition = defaultVO.getSearchCondition();
+			/** 검색Keyword */
+			String searchKeyword = defaultVO.getSearchKeyword();
+			/** 검색사용여부 */
+			String searchUseYn = defaultVO.getSearchUseYn();
+			/** 현재페이지 */
+			int pageIndex = defaultVO.getPageIndex();
+			/** 페이지갯수 */
+			int pageUnit = defaultVO.getPageUnit();
+			/** 페이지사이즈 */
+			int pageSize = defaultVO.getPageSize();
+			/** firstIndex */
+			int firstIndex = defaultVO.getFirstIndex();
+			/** lastIndex */
+			int lastIndex = defaultVO.getLastIndex();
+			/** recordCountPerPage */
+			int recordCountPerPage = defaultVO.getRecordCountPerPage();
+			
+//			유효성 검사
+			
+			/** 검색조건 */
+			if(searchCondition == null || searchCondition.equals("")){
+				LOGGER.info("searchCondition == null || searchCondition.equals('')");
+			}
+			/** 검색Keyword */
+			if(searchKeyword == null || searchKeyword.equals("")){
+				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
+			}
+			/** 검색사용여부 */
+			if(searchUseYn == null || searchUseYn.equals("")){
+				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
+			}
+			/** 현재페이지 */
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
+			}
+			/** 페이지갯수 */
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
+			}
+			/** 페이지사이즈 */
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
+			}
+			/** firstIndex */
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
+			}
+			/** lastIndex */
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
+			}
+			/** recordCountPerPage */
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
+			}
+		}//	defaultVO 객체 유효성검사 else End
+		
+//		유효성 검사
+		
+		/** aptReviewVO 객체 */
+		if(aptReviewVO==null || aptReviewVO.equals("")){
+			LOGGER.info("aptReviewVO == null || aptReviewVO.equals('')");
+		
+		}else{
+			
+			/** 후기게시판번호 */
+			int aptReviewNo = aptReviewVO.getAptReviewNo();
+			/** 작성자 */
+			int memberNo = aptReviewVO.getMemberNo();
+			/** 지역코드 */
+			String aptZoneCode = aptReviewVO.getAptZoneCode();
+			/** 단지코드 */
+			String aptBlockCode = aptReviewVO.getAptBlockCode();
+			/** 제목 */
+			String aptReviewTitle = aptReviewVO.getAptReviewTitle();
+			/** 내용 */
+			String aptReviewContent = aptReviewVO.getAptReviewContent();
+			/** 조회수 */
+			int aptReviewClick = aptReviewVO.getAptReviewClick();
+			/** 답변 게시물 그룹 */
+			int aptReviewGroup = aptReviewVO.getAptReviewGroup();
+			/** 답변 게시물 순서 */
+			int aptReviewNum = aptReviewVO.getAptReviewNum();
+			/** 답변 게시물 깊이 */
+			int aptReviewDepth = aptReviewVO.getAptReviewDepth();
+			/** 작성일 */
+			String aptReviewCreateDate = aptReviewVO.getAptReviewCreateDate();
+			/** 수정일 */
+			String aptReviewUpdateDate = aptReviewVO.getAptReviewUpdateDate();
+			
+//			유효성 검사
+			
+			/** 후기게시판번호 */
+			if(aptReviewNo == 0 || aptReviewNo < 0){
+				LOGGER.info("aptReviewNo == 0 || aptReviewNo < 0");
+			}
+			
+			/** 작성자 */
+			if(memberNo == 0 || memberNo < 0){
+				LOGGER.info("memberNo == 0 || memberNo < 0");
+			}
+			
+			/** 지역코드 */
+			if(aptZoneCode == null || aptZoneCode.equals("")){
+				LOGGER.info("aptZoneCode == null || aptZoneCode.equals('')");
+			}
+			
+			/** 단지코드 */
+			if(aptBlockCode == null || aptBlockCode.equals("")){
+				LOGGER.info("aptBlockCode == null || aptBlockCode.equals('')");
+			}
+			
+			/** 제목 */
+			if(aptReviewTitle == null || aptReviewTitle.equals("")){
+				LOGGER.info("aptReviewTitle == null || aptReviewTitle.equals('')");
+			}
+			
+			/** 내용 */
+			if(aptReviewContent == null || aptReviewContent.equals("")){
+				LOGGER.info("aptReviewContent == null || aptReviewContent.equals('')");
+			}
+			
+			/** 조회수 */
+			if(aptReviewClick == 0 || aptReviewClick < 0){
+				LOGGER.info("aptReviewClick == 0 || aptReviewClick < 0");
+			}
+			
+			/** 답변 게시물 그룹 */
+			if(aptReviewGroup == 0 || aptReviewGroup < 0){
+				LOGGER.info("aptReviewGroup == 0 || aptReviewGroup < 0");
+			}
+			
+			/** 답변 게시물 순서 */
+			if(aptReviewNum == 0 || aptReviewNum < 0){
+				LOGGER.info("aptReviewNum == 0 || aptReviewNum < 0");
+			}
+			
+			/** 답변 게시물 깊이 */
+			if(aptReviewDepth == 0 || aptReviewDepth < 0){
+				LOGGER.info("aptReviewDepth == 0 || aptReviewDepth < 0");
+			}
+			
+			/** 작성일 */
+			if(aptReviewCreateDate == null || aptReviewCreateDate.equals("")){
+				LOGGER.info("aptReviewCreateDate == null || aptReviewCreateDate.equals('')");
+			}
+			
+			/** 수정일 */
+			if(aptReviewUpdateDate == null || aptReviewUpdateDate.equals("")){
+				LOGGER.info("aptReviewUpdateDate == null || aptReviewUpdateDate.equals('')");
+			}
+		}//	aptReviewVO 객체 유효성검사 else End
+		
+//		페이지 정보 저장
+		model.addAttribute("defaultVO", defaultVO);
+		
+//		후기게시판 게시글 데이터 입력
+		int result; 
+		try{
+			result = tbAptReviewService.insertAptReview(aptReviewVO, request);
+			LOGGER.info("TBAptReviewController insertAptReview result: "+result);
+		}catch(Exception e){
+			result = -1;
+			LOGGER.info("TBAptReviewController insertAptReview Exception result: "+result);
+			e.printStackTrace();
+		}
+		
+//		입력결과 확인
+		if(result >= 1){
+		model.addAttribute("insertResult",result);
+
+//		@Controller insertAptReviewReply() 아웃로그
+		LOGGER.info("@Controller insertAptReviewReply() Out");
+		
+//		후기게시판 목록으로 이동
+		return "forward:/selectAptReviewList.do";
+		
+		}else{
+			LOGGER.info("입력오류");
+			result = -1;
+			model.addAttribute("insertResult",result);
+			return "forward:/insertAptReviewReplyForm.do";
+		}
+}
+	
+	
+	
+	
 	
 	/**
 	 * 모집공고 수정페이지 조회한다.
@@ -622,7 +943,7 @@ public class TBAptReviewController{
 //		수정페이지 이동
 		return "aptreview/aptReviewUpdate";
 	}
-
+	
 	
 	
 	

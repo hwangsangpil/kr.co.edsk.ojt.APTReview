@@ -33,12 +33,12 @@ request.setCharacterEncoding("UTF-8");
 	}
 	
 	/* 게시글 답글등록 */
-/* 	function insertAptReviewReply() {
+function insertAptReviewReply() {
 		document.aptReviewListView.method = "post";
-		document.aptReviewListView.action = "/updateAptReviewForm.do";
+		document.aptReviewListView.action = "/insertAptReviewReplyForm.do";
 		document.aptReviewListView.submit();
 	} 
-*/
+
 	
 	/* 취소 시 목록페이지 이동 */
 	function selectAptReview(pageIndex) {
@@ -75,9 +75,6 @@ request.setCharacterEncoding("UTF-8");
         <form id="aptReviewListView" name= "aptReviewListView">
         
         <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${selectAptReviewView.APT_REVIEW_NO}"/>
-<%--         <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-        </c:forEach>
- --%>        
         <input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}"/>
          <div id="tab-general">
           <div class="row mbl">
@@ -87,9 +84,6 @@ request.setCharacterEncoding("UTF-8");
               <div class="panel panel-yellow">
               
                <div class="panel-heading">${selectAptReviewView.APT_REVIEW_TITLE}</div>
-<%--               <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-               </c:forEach> --%>
-               
                <div class="mbl"></div>
                <div class="col-lg-8">&nbsp;</div>
                <div class="col-lg-4">
@@ -114,15 +108,9 @@ request.setCharacterEncoding("UTF-8");
                      <td style="text-align:center;">${selectAptReviewView.APT_ZONE_CODE_VALUE}</td>
                      <td style="text-align:center;">${selectAptReviewView.APT_BLOCK_CODE_VALUE}</td>
                      <td style="text-align:center;">${selectAptReviewView.APT_REVIEW_TITLE}</td>
-<%--
-                     <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-                     </c:forEach>
- --%>
-                      <td style="text-align:center;">${defaultVO.pageIndex}</td>
+                     <td style="text-align:center;">${defaultVO.pageIndex}</td>
                      <td style="text-align:center;">${selectAptReviewView.APT_REVIEW_CONTENTS}</td>
-<%--                      <c:forEach items="${selectAptReviewView}" var="selectAptReviewView">
-                     </c:forEach>
- --%>                    </tr>
+                    </tr>
                   </tbody>
                  </table>
                 </div>
@@ -130,7 +118,7 @@ request.setCharacterEncoding("UTF-8");
                 <div class="text-right pal">
                  <button type="button" class="btn btn-primary" onclick="updateAptReview();" tabindex="1">수정</button>
                  <button type="button" class="btn btn-primary" onclick="deleteAptReview();" tabindex="2">삭제</button>
-                 <!-- <button type="button" class="btn btn-primary" onclick="insertAptReviewReply();" tabindex="3">답글작성</button> -->
+                 <button type="button" class="btn btn-primary" onclick="insertAptReviewReply();" tabindex="3">답글작성</button>
                  <button type="button" class="btn btn-primary" onclick="selectAptReview(${defaultVO.pageIndex});" tabindex="4">목록</button>
                 </div>
               </div>
