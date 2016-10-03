@@ -76,6 +76,15 @@ public interface TBAptReviewMapper {
 	
 	public void insertAptReviewFile(Map<String,Object> map) throws Exception;
 	
+	public void updateAptReviewReplyNum(TBAptReviewVO aptReviewVO) throws Exception;
+	
+	public void updateAptReviewReplyFileNum(TBAptReviewVO aptReviewVO) throws Exception;
+	
+	public int insertAptReviewReply(TBAptReviewVO aptReviewVO) throws Exception;
+	
+	public void insertAptReviewReplyFile(Map<String,Object> map) throws Exception;
+
+	
 	/**
 	 * 후기게시판 수정
 	 * @param aptReviewVO - 수정할 정보가 담긴 TBAptReviewVO
@@ -105,4 +114,6 @@ public interface TBAptReviewMapper {
 	public Map<String,String> selectReplyZoneCode(String aptZoneCode) throws Exception;
 	
 	public Map<String,String> selectReplyBlockCode(String aptBlockCode) throws Exception;
+	
+	public int updateAptReviewGroup(int aptReviewNo) throws Exception;
 }

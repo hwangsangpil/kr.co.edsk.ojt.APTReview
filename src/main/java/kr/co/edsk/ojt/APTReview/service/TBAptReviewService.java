@@ -71,6 +71,8 @@ public interface TBAptReviewService {
 	 * @exception Exception
 	 */
 	public int insertAptReview(TBAptReviewVO aptReviewVO, HttpServletRequest request) throws Exception;
+	
+	public int insertAptReviewReply(TBAptReviewVO aptReviewVO, HttpServletRequest request) throws Exception;
 
 	/**
 	 * 후기게시판 수정

@@ -811,11 +811,11 @@ public class TBAptReviewController{
 //		후기게시판 게시글 데이터 입력
 		int result; 
 		try{
-			result = tbAptReviewService.insertAptReview(aptReviewVO, request);
-			LOGGER.info("TBAptReviewController insertAptReview result: "+result);
+			result = tbAptReviewService.insertAptReviewReply(aptReviewVO, request);
+			LOGGER.info("TBAptReviewController insertAptReviewReply result: "+result);
 		}catch(Exception e){
 			result = -1;
-			LOGGER.info("TBAptReviewController insertAptReview Exception result: "+result);
+			LOGGER.info("TBAptReviewController insertAptReviewReply Exception result: "+result);
 			e.printStackTrace();
 		}
 		

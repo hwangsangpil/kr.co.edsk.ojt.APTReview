@@ -143,8 +143,8 @@
 		APT_REVIEW_CONTENTS, 
 		APT_REVIEW_CLICKS, 
 		APT_REVIEW_GROUP,
+		APT_REVIEW_NUM,
 		APT_REVIEW_DEPTH,
-		APT_REVIEW_NUM, 
 		APT_REVIEW_CREATE_DATE,
 		APT_REVIEW_UPDATE_DATE 
 		) 
@@ -156,15 +156,23 @@
 		#{aptReviewTitle},
 		#{aptReviewContent}, 
 		'0', 
-		(SELECT * FROM (SELECT MAX(LAST_INSERT_ID(APT_REVIEW_NO)+1) FROM TB_APT_REVIEW) AS TEMP), 
-		'1', 
-		'0', 
+		'1',
+		'1',
+		'0',
 		now(), 
 		now() 
 		);
 		
 	</insert>
 
+	<update id="updateAptReviewGroup" parameterType="int">
+	    UPDATE TB_APT_REVIEW
+	    SET
+	    APT_REVIEW_GROUP = #{aptReviewNo}
+	    WHERE
+	    APT_REVIEW_NO = #{aptReviewNo}
+	</update>
+	
 	<insert id="insertAptReviewFile" parameterType="hashmap">
 	    INSERT INTO TB_APT_REVIEW_FILE
 	    (
@@ -193,6 +201,87 @@
 	    
 	</insert>
 	
+	<!-- 후기게시판 답글등록 -->
+	
+	<update id="updateAptReviewReplyNum" parameterType="tbAptReviewVO">
+	    UPDATE TB_APT_REVIEW
+	    SET
+	    APT_REVIEW_NUM = APT_REVIEW_NUM+1
+	    WHERE
+	    APT_REVIEW_GROUP = (SELECT * FROM (SELECT APT_REVIEW_GROUP FROM TB_APT_REVIEW WHERE APT_REVIEW_NO = #{aptReviewNo}) AS TEMP)
+	    AND APT_REVIEW_NUM > 1;
+	</update>
+	
+	<update id="updateAptReviewReplyFileNum" parameterType="tbAptReviewVO">
+	    UPDATE TB_APT_REVIEW_FILE
+	    SET
+	    APT_REVIEW_NUM = APT_REVIEW_NUM+1
+	    WHERE
+	    APT_REVIEW_GROUP = (SELECT * FROM (SELECT APT_REVIEW_GROUP FROM TB_APT_REVIEW_FILE WHERE APT_REVIEW_NO = #{aptReviewNo}) AS TEMP) 
+	    AND APT_REVIEW_NUM > 1;
+	</update>
+	
+	<insert id="insertAptReviewReply" parameterType="tbAptReviewVO" useGeneratedKeys="true" keyProperty="aptReviewNo">
+	    INSERT INTO TB_APT_REVIEW 
+	 	( 
+	 	MEMBER_NO , 
+	    APT_ZONE_CODE, 
+	    APT_BLOCK_CODE, 
+	    APT_REVIEW_TITLE,
+		APT_REVIEW_CONTENTS, 
+		APT_REVIEW_CLICKS, 
+		APT_REVIEW_GROUP,
+		APT_REVIEW_NUM,
+		APT_REVIEW_DEPTH,
+		APT_REVIEW_CREATE_DATE,
+		APT_REVIEW_UPDATE_DATE 
+		) 
+		VALUES 
+		( 
+		(SELECT MEMBER_NO FROM TB_MEMBER WHERE MEMBER_NO = #{memberNo}), 
+		(SELECT APT_ZONE_CODE FROM TB_ZONE_CODE WHERE APT_ZONE_CODE = #{aptZoneCode}),
+		(SELECT APT_BLOCK_CODE FROM TB_BLOCK_CODE WHERE APT_BLOCK_CODE = #{aptBlockCode}), 
+		#{aptReviewTitle},
+		#{aptReviewContent}, 
+		'0', 
+		(SELECT * FROM (SELECT APT_REVIEW_GROUP FROM TB_APT_REVIEW WHERE APT_REVIEW_NO = #{aptReviewNo})as temp),
+		'2',
+		#{aptReviewDepth},
+		now(), 
+		now() 
+		);
+	    
+	    
+	</insert>
+	
+		<insert id="insertAptReviewReplyFile" parameterType="hashmap">
+	    INSERT INTO TB_APT_REVIEW_FILE
+	    (
+	    	APT_REVIEW_NO,
+	    	APT_REVIEW_GROUP,
+	    	APT_REVIEW_DEPTH,
+	    	APT_REVIEW_NUM,
+	    	APT_REVIEW_SIZE,
+	    	APT_REVIEW_STORED_FILE_NAME,
+	    	APT_REVIEW_ORIGINAL_FILE_NAME,
+	    	APT_REVIEW_FILE_CREATE_DATE,
+	    	APT_REVIEW_FILE_UPDATE_DATE
+	    )
+	    VALUES
+	    (
+	    	#{APT_REVIEW_NO},
+	    	(SELECT APT_REVIEW_GROUP FROM TB_APT_REVIEW WHERE APT_REVIEW_NO = #{APT_REVIEW_NO}),
+	    	(SELECT APT_REVIEW_DEPTH FROM TB_APT_REVIEW WHERE APT_REVIEW_NO = #{APT_REVIEW_NO}),
+	    	'2',
+	    	#{APT_REVIEW_SIZE},
+	    	#{APT_REVIEW_STORED_FILE_NAME},
+	    	#{APT_REVIEW_ORIGINAL_FILE_NAME},
+	    	now(),
+	    	now()
+	    );
+	    
+	</insert>
+		
 	<!-- 후기게시판 수정 -->
 	<update id="updateAptReview" parameterType="tbAptReviewVO">
 	    

@@ -9,14 +9,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Component("fileUtils")
 public class FileUtils {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 	
 	private static final String filePath = "C:\\test\\file\\";
     
@@ -28,27 +30,41 @@ public class FileUtils {
         String originalFileName = null;
         String originalFileExtension = null;
         String storedFileName = null;
+        String FileSize = null;
          
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         Map<String, Object> listMap = null; 
          
         String boardIdx = String.valueOf(aptReviewNo);
-         
+        
         File file = new File(filePath);
         if(file.exists() == false){
             file.mkdirs();
         }
-         
+        
+        while(!iterator.hasNext()){
+        	LOGGER.info("-------------- !iterator.hasNext() --------------\n");
+        	originalFileName = "";
+            originalFileExtension = "";
+            storedFileName = "";
+            FileSize = "0";
+        listMap = new HashMap<String,Object>();
+        listMap.put("APT_REVIEW_NO", boardIdx);
+        listMap.put("APT_REVIEW_ORIGINAL_FILE_NAME", originalFileName);
+        listMap.put("APT_REVIEW_STORED_FILE_NAME", storedFileName);
+        listMap.put("APT_REVIEW_SIZE", FileSize);
+        list.add(listMap);
+        }
         while(iterator.hasNext()){
             multipartFile = multipartHttpServletRequest.getFile(iterator.next());
             if(multipartFile.isEmpty() == false){
                 originalFileName = multipartFile.getOriginalFilename();
                 originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
                 storedFileName = CommonUtils.getRandomString() + originalFileExtension;
-                 
+                
                 file = new File(filePath + storedFileName);
                 multipartFile.transferTo(file);
-                 
+                
                 listMap = new HashMap<String,Object>();
                 listMap.put("APT_REVIEW_NO", boardIdx);
                 listMap.put("APT_REVIEW_ORIGINAL_FILE_NAME", originalFileName);
@@ -57,6 +73,7 @@ public class FileUtils {
                 list.add(listMap);
             }
         }
+
         return list;
     }
 }

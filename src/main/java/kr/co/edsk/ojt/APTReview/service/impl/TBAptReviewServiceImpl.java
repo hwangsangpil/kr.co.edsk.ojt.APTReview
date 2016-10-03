@@ -151,7 +151,12 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 //		후기게시판 정보 Database에 입력
 		int result = tbAptReviewMapper.insertAptReview(aptReviewVO);
 		int aptReviewNo = aptReviewVO.getAptReviewNo();		
+		LOGGER.info("\n\n------------- aptReviewNo  -------------:  "+aptReviewNo+"\n");
+			LOGGER.info("updateAptReviewGroup In");
+			int result2 = tbAptReviewMapper.updateAptReviewGroup(aptReviewNo);
+			LOGGER.info("updateAptReviewGroup:  "+result2);
 		
+
 //		Exception 발생시키기
 //		String test = "12345";
 //		aptReviewVO.setAptZoneCode(test);
@@ -183,7 +188,77 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 //		결과값 리턴
 		return result;
 	}
+	
+	
+	
+	
+	
+	@Override
+	public int insertAptReviewReply(TBAptReviewVO aptReviewVO,
+			HttpServletRequest request) throws Exception {
 
+//		로그인된 사용자의 일련번호로 작성자를 자동입력하기 위한 테스트
+//		작성자 번호 임의지정
+//		memberNO 값으로 로그인 일련번호를 넣어준다 
+		int memberNo = 2;
+		
+//		작성자번호 aptReviewVO 에 추가
+		aptReviewVO.setMemberNo(memberNo);
+		
+		tbAptReviewMapper.updateAptReviewReplyNum(aptReviewVO);
+		tbAptReviewMapper.updateAptReviewReplyFileNum(aptReviewVO);
+		
+		String aptReviewTitle = aptReviewVO.getAptReviewTitle();
+		if(aptReviewTitle.contains("re:")){
+			aptReviewVO.setAptReviewDepth(1);
+		}
+		if(aptReviewTitle.contains("re:re:")){
+			aptReviewVO.setAptReviewDepth(2);
+		}
+		
+//		후기게시판 정보 Database에 입력
+		int result = tbAptReviewMapper.insertAptReviewReply(aptReviewVO);
+		int aptReviewNo = aptReviewVO.getAptReviewNo();		
+		LOGGER.info("\n\n------------- aptReviewNo  -------------:  "+aptReviewNo+"\n");
+		
+
+//		Exception 발생시키기
+//		String test = "12345";
+//		aptReviewVO.setAptZoneCode(test);
+//		result = tbAptReviewMapper.insertAptReview(aptReviewVO);
+//		LOGGER.info("2 INSERT :   "+result);
+		
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+	    Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+	    MultipartFile multipartFile = null;
+	    while(iterator.hasNext()){
+	        multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+	        if(multipartFile.isEmpty() == false){
+	        	LOGGER.info("------------- file start -------------");
+	        	LOGGER.info("name : "+multipartFile.getName());
+	        	LOGGER.info("filename : "+multipartFile.getOriginalFilename());
+	        	LOGGER.info("size : "+multipartFile.getSize());
+	        	LOGGER.info("-------------- file end --------------\n");
+	        }
+	    }
+		
+	    List<Map<String,Object>> list = fileUtils.parseInsertFileInfo(aptReviewNo, request);
+		    for(int i=0, size=list.size(); i<size; i++){
+		    	tbAptReviewMapper.insertAptReviewReplyFile(list.get(i));
+	        }
+	    
+//		입력결과 로그
+		LOGGER.info("TBAptReviewServiceImpl insertAptReview result: "+result+" --- :"+aptReviewNo);
+		
+//		결과값 리턴
+		return result;
+		
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * 후기게시판 수정
@@ -272,6 +347,8 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 			throws Exception {
 		return tbAptReviewMapper.selectReplyBlockCode(aptBlockCode);
 	}
+
+
 
 
 

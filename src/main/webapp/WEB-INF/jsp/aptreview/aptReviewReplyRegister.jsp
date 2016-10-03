@@ -205,7 +205,7 @@ function hitEnterKey(e){
 	                                	<div class="panel-body pan">
 	                                    	<form id="aptReviewReplyRegister" name="aptReviewReplyRegister">
 	                                    		<input type="hidden" id="pageIndex" name="pageIndex" value="${defaultVO.pageIndex}">
-	                                    		<input type="hidden" id="aptReviewNo" name="aptReviewNo" value="0">
+	                                    		<input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${AptReviewReplyList.APT_REVIEW_NO}">
 	                                    		<div class="form-body pal">
 	                                    			<!-- 지역 -->
 	                                    			<div>
