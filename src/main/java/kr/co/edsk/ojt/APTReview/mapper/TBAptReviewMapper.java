@@ -78,7 +78,7 @@ public interface TBAptReviewMapper {
 	
 	public void updateAptReviewReplyNum(TBAptReviewVO aptReviewVO) throws Exception;
 	
-	public void updateAptReviewReplyFileNum(TBAptReviewVO aptReviewVO) throws Exception;
+	public void updateAptReviewReplyFileNum(int aptReviewGroup) throws Exception;
 	
 	public int insertAptReviewReply(TBAptReviewVO aptReviewVO) throws Exception;
 	
@@ -116,4 +116,6 @@ public interface TBAptReviewMapper {
 	public Map<String,String> selectReplyBlockCode(String aptBlockCode) throws Exception;
 	
 	public int updateAptReviewGroup(int aptReviewNo) throws Exception;
+	
+	public int selectAptReviewReplyFileGroup(TBAptReviewVO tbAptReviewVO) throws Exception;
 }

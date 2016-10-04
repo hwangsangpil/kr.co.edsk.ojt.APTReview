@@ -9,7 +9,7 @@ request.setCharacterEncoding("UTF-8");
 <html lang="ko">
 <head>
 <title>후기게시판</title>
-<%@ include file="../include/inc_header.jsp"%>
+<%@ include file="include/inc_header.jsp"%>
 <script type="text/javascript">
 
 /* 입력결과 확인 */
@@ -64,21 +64,14 @@ function selectAptReviewView(aptReviewNo){
 <body>
  <div style="min-width: 300px">
   <!--BEGIN TOPBAR-->
-  <%@ include file="../include/inc_top.jsp"%>
+  <%@ include file="include/inc_top.jsp"%>
    <!--END TOPBAR-->
    <div id="wrapper">
     <!--BEGIN SIDEBAR MENU-->
-    <%@ include file="../include/inc_left_menu.jsp"%>
+    <%@ include file="include/inc_left_menu.jsp"%>
      <!--END SIDEBAR MENU-->
      <div id="page-wrapper">
-      <!--BEGIN TITLE & BREADCRUMB PAGE-->
-      <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-       <div class="page-header pull-left">
-        <div class="page-title">후기게시판</div>
-       </div>
-       <div class="clearfix"></div>
-      </div>
-       <!--END TITLE & BREADCRUMB PAGE-->
+
        <!--BEGIN CONTENT-->
        <div class="page-content">
         <!-- commandName == @ModelAttribute(값) -->
@@ -89,35 +82,22 @@ function selectAptReviewView(aptReviewNo){
            <div class="col-lg-12">
             <div class="row">
              <div class="col-lg-12">
-              <div class="panel panel-yellow">
-               <div class="panel-heading">후기게시글 목록</div>
+             
+             
+              <div class="panel panel-yellow" style="width: 48.9%; float: left;">
+               <div class="panel-heading" style="text-align:center;">모집공고 목록</div>
                <div class="mbl"></div>
                <div class="col-lg-8">&nbsp;</div>
-               <!-- 
-               <div class="col-lg-4">
-                <div class="input-group">
-                 <span class="input-group-addon">
-                  <i class="fa fa-search"></i>
-                 </span>
-                 
-                 <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요" value="" class="form-control"  tabindex="1"/>
-                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-default" onclick="searchAptReview()" tabindex="3">검색</button>
-				 </span>
-				</div>
-               </div> 
-               -->
                <div class="col-lg-12">&nbsp;</div>
                <div class="col-lg-12">&nbsp;</div>
                 <div class="panel-body" style="overflow: auto;">
                  <table class="table table-hover">
                   <thead>
                    <tr>
-                    <th style="text-align:center; width: 50px;">NO</th>
-                    <th style="text-align:center; width: 200px;">지역</th>
+                   	<th style="text-align:center; width: 50px;">NO</th>
+                   	<th style="text-align:center; width: 200px;">지역</th>
                     <th style="text-align:center; width: 150px;">단지</th>
                     <th style="text-align:center; width: 150px;">제목</th>
-                    <th style="text-align:center; width: 150px;">작성자</th>
                     <th style="text-align:center; width: 150px;">작성일</th>
                    </tr>
                   </thead>
@@ -129,7 +109,6 @@ function selectAptReviewView(aptReviewNo){
                      <td style="text-align:center;">${dto.aptZoneCodeValue}</td>
                      <td style="text-align:center;">${dto.aptBlockCodeValue}</td>
                      <td style="text-align:left;">${dto.aptReviewTitle}</td>
-                     <td style="text-align:center;">${dto.memberName}</td>
                      <td style="text-align:center;">${dto.aptReviewCreateDate}</td>
                     </tr>
                    </c:forEach>
@@ -137,14 +116,43 @@ function selectAptReviewView(aptReviewNo){
                  </table>
                 </div>
                 <!-- /List -->
-                <div id="paging">
-                 <ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_egov_link_page" />
-                  <form:hidden path="pageIndex"/>
-                </div>
-                <div class="text-right pal">
-                 <button type="button" class="btn btn-primary" onclick="insertAptReview();" tabindex="4">등록</button>
-                </div>
               </div>
+              
+              
+              <div class="panel panel-yellow" style="width: 48.9%; float: right;">
+               <div class="panel-heading" style="text-align:center;">후기게시판 목록</div>
+               <div class="mbl"></div>
+               <div class="col-lg-8">&nbsp;</div>
+               <div class="col-lg-12">&nbsp;</div>
+               <div class="col-lg-12">&nbsp;</div>
+                <div class="panel-body" style="overflow: auto;">
+                 <table class="table table-hover">
+                  <thead>
+                   <tr>
+                    <th style="text-align:center; width: 50px;">NO</th>
+                    <th style="text-align:center; width: 200px;">지역</th>
+                    <th style="text-align:center; width: 150px;">단지</th>
+                    <th style="text-align:center; width: 150px;">제목</th>
+                    <th style="text-align:center; width: 150px;">작성일</th>
+                   </tr>
+                  </thead>
+                  <tbody>
+                   <c:forEach items="${selectAptReviewList}" var="dto">
+                	<%-- <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${dto.aptReviewNo}"/> --%>
+                    <tr  style="cursor: pointer;" onclick="selectAptReviewView(${dto.aptReviewNo});">
+                     <td style="text-align:center;">${dto.aptReviewNo}</td>
+                     <td style="text-align:center;">${dto.aptZoneCodeValue}</td>
+                     <td style="text-align:center;">${dto.aptBlockCodeValue}</td>
+                     <td style="text-align:left;">${dto.aptReviewTitle}</td>
+                     <td style="text-align:center;">${dto.aptReviewCreateDate}</td>
+                    </tr>
+                   </c:forEach>
+                  </tbody>
+                 </table>
+                </div>
+                <!-- /List -->
+              </div>
+              
              </div>
             </div>
            </div>

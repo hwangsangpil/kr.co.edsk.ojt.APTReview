@@ -30,7 +30,6 @@ public class FileUtils {
         String originalFileName = null;
         String originalFileExtension = null;
         String storedFileName = null;
-        String FileSize = null;
          
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         Map<String, Object> listMap = null; 
@@ -42,22 +41,10 @@ public class FileUtils {
             file.mkdirs();
         }
         
-        while(!iterator.hasNext()){
-        	LOGGER.info("-------------- !iterator.hasNext() --------------\n");
-        	originalFileName = "";
-            originalFileExtension = "";
-            storedFileName = "";
-            FileSize = "0";
-        listMap = new HashMap<String,Object>();
-        listMap.put("APT_REVIEW_NO", boardIdx);
-        listMap.put("APT_REVIEW_ORIGINAL_FILE_NAME", originalFileName);
-        listMap.put("APT_REVIEW_STORED_FILE_NAME", storedFileName);
-        listMap.put("APT_REVIEW_SIZE", FileSize);
-        list.add(listMap);
-        }
         while(iterator.hasNext()){
-            multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+        	multipartFile = multipartHttpServletRequest.getFile(iterator.next());
             if(multipartFile.isEmpty() == false){
+            	LOGGER.info("------------- multipartFile.isEmpty() == false -------------");
                 originalFileName = multipartFile.getOriginalFilename();
                 originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
                 storedFileName = CommonUtils.getRandomString() + originalFileExtension;
@@ -72,8 +59,23 @@ public class FileUtils {
                 listMap.put("APT_REVIEW_SIZE", multipartFile.getSize());
                 list.add(listMap);
             }
+            if(multipartFile.isEmpty() == true){
+            	if(originalFileName==null){
+            	LOGGER.info("------------- multipartFile.isEmpty() == true -------------");
+                originalFileName = multipartFile.getOriginalFilename();
+                storedFileName = "No Data";
+                
+                listMap = new HashMap<String,Object>();
+                listMap.put("APT_REVIEW_NO", boardIdx);
+                listMap.put("APT_REVIEW_ORIGINAL_FILE_NAME", originalFileName);
+                listMap.put("APT_REVIEW_STORED_FILE_NAME", storedFileName);
+                listMap.put("APT_REVIEW_SIZE", multipartFile.getSize());
+                list.add(listMap);
+                break;
+            	}
+            }
         }
-
+        
         return list;
     }
 }

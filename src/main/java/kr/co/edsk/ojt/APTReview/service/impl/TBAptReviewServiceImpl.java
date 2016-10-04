@@ -162,10 +162,11 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 //		aptReviewVO.setAptZoneCode(test);
 //		result = tbAptReviewMapper.insertAptReview(aptReviewVO);
 //		LOGGER.info("2 INSERT :   "+result);
-		
+			
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
 	    Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
 	    MultipartFile multipartFile = null;
+	    
 	    while(iterator.hasNext()){
 	        multipartFile = multipartHttpServletRequest.getFile(iterator.next());
 	        if(multipartFile.isEmpty() == false){
@@ -175,12 +176,21 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 	        	LOGGER.info("size : "+multipartFile.getSize());
 	        	LOGGER.info("-------------- file end --------------\n");
 	        }
+	        if(multipartFile.isEmpty() == true){
+	        	LOGGER.info("------------- file !start -------------");
+	        	LOGGER.info("name : "+multipartFile.getName());
+	        	LOGGER.info("filename : "+multipartFile.getOriginalFilename());
+	        	LOGGER.info("size : "+multipartFile.getSize());
+	        	LOGGER.info("-------------- file !end --------------\n");
+	        }
+	        
 	    }
 		
 	    List<Map<String,Object>> list = fileUtils.parseInsertFileInfo(aptReviewNo, request);
+	    LOGGER.info("-------------- file !end --------------\n"+list);
 		    for(int i=0, size=list.size(); i<size; i++){
 		    	tbAptReviewMapper.insertAptReviewFile(list.get(i));
-	        }
+	    }
 	    
 //		입력결과 로그
 		LOGGER.info("TBAptReviewServiceImpl insertAptReview result: "+result+" --- :"+aptReviewNo);
@@ -206,7 +216,9 @@ public class TBAptReviewServiceImpl extends EgovAbstractServiceImpl implements T
 		aptReviewVO.setMemberNo(memberNo);
 		
 		tbAptReviewMapper.updateAptReviewReplyNum(aptReviewVO);
-		tbAptReviewMapper.updateAptReviewReplyFileNum(aptReviewVO);
+		int aptReviewGroup = tbAptReviewMapper.selectAptReviewReplyFileGroup(aptReviewVO);
+		LOGGER.info("\n\n------------- aptReviewGroup  -------------:  "+aptReviewGroup+"\n");
+		tbAptReviewMapper.updateAptReviewReplyFileNum(aptReviewGroup);
 		
 		String aptReviewTitle = aptReviewVO.getAptReviewTitle();
 		if(aptReviewTitle.contains("re:")){

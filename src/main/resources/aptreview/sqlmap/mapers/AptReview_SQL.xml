@@ -73,7 +73,7 @@
 			'%' </when> <when test="searchCondition == 1"> AND NAME LIKE '%' || #{searchKeyword} 
 			|| '%' </when> </choose> </if> -->
 	
-		ORDER BY APT_REVIEW_NO DESC
+		ORDER BY APT_REVIEW_GROUP DESC, APT_REVIEW_DEPTH, APT_REVIEW_NUM
 		LIMIT #{recordCountPerPage} OFFSET #{firstIndex};
 
 	</select>
@@ -212,12 +212,12 @@
 	    AND APT_REVIEW_NUM > 1;
 	</update>
 	
-	<update id="updateAptReviewReplyFileNum" parameterType="tbAptReviewVO">
+	<update id="updateAptReviewReplyFileNum" parameterType="int">
 	    UPDATE TB_APT_REVIEW_FILE
 	    SET
 	    APT_REVIEW_NUM = APT_REVIEW_NUM+1
 	    WHERE
-	    APT_REVIEW_GROUP = (SELECT * FROM (SELECT APT_REVIEW_GROUP FROM TB_APT_REVIEW_FILE WHERE APT_REVIEW_NO = #{aptReviewNo}) AS TEMP) 
+	    APT_REVIEW_GROUP =  #{aptReviewGroup}
 	    AND APT_REVIEW_NUM > 1;
 	</update>
 	
@@ -369,5 +369,15 @@
 	    FROM
 	    TB_APT_REVIEW
 	    WHERE APT_REVIEW_NO = #{aptReviewNo};
+	</select>
+	
+	<select id="selectAptReviewReplyFileGroup" parameterType="tbAptReviewVO" resultType="int">
+	    SELECT
+	    APT_REVIEW_GROUP
+	    FROM
+	    TB_APT_REVIEW_FILE
+	    WHERE
+	    APT_REVIEW_NO = #{aptReviewNo}
+	    limit 1
 	</select>
 </mapper>

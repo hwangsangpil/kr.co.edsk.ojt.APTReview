@@ -236,7 +236,7 @@ function hitEnterKey(e){
 														<div class="aptReviewRegister-item-name">제목</div>
 														<div class="aptReviewRegister-item-input">
 															<input type="text" class="form-control" onclick="clickAptReviewTitle()"
-															readonly placeholder="re:${AptReviewReplyList.APT_REVIEW_TITLE}">
+															readonly placeholder="	re:${AptReviewReplyList.APT_REVIEW_TITLE}">
 															<input type="hidden" id="aptReviewTitle" name="aptReviewTitle"
 															value="re:${AptReviewReplyList.APT_REVIEW_TITLE}">
 														</div>

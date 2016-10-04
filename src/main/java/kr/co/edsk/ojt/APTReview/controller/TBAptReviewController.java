@@ -1,4 +1,4 @@
-	package kr.co.edsk.ojt.APTReview.controller;
+package kr.co.edsk.ojt.APTReview.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +57,76 @@ public class TBAptReviewController{
 
 	
 	
+
+	
+	/** 모집공고글 목록 조회(paging)
+	 *  
+	 * @param defaultVO - 조회할 정보가 담긴 DefaultVO
+	 * @param model
+	 * 					Model → Interface , ModelMap → 구현체
+	 * 					Spring @mvc 이전에는 ModelAndView를 통해서 뷰 페이지를 전달
+						Spring @mvc 이후에는 Model or ModelMap를 사용한다.
+	 * @return "aptreview/aptReviewList"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "/selectHomeList.do")
+//			<form:form commandName="defaultVO">@ModelAttribute("defaultVO")는 같아야한다
+	public String selectHomeList(@ModelAttribute("defaultVO") DefaultVO defaultVO, ModelMap model) throws Exception {
+//		@Controller selectAptReviewList() 진입로그
+		LOGGER.info("@Controller selectHomeList() In");
+		
+//			pageing setting
+			
+			/** 페이지갯수 */
+			defaultVO.setPageUnit(propertiesService.getInt("pageUnit"));
+			/** 페이지사이즈 */
+			defaultVO.setPageSize(propertiesService.getInt("pageSize"));
+	
+			PaginationInfo paginationInfo = new PaginationInfo();
+//			현재 페이지 번호를 저장
+			paginationInfo.setCurrentPageNo(defaultVO.getPageIndex());
+			
+//			한 페이지에 해당되는 게시물 갯수 저장
+			paginationInfo.setRecordCountPerPage(defaultVO.getPageUnit());
+			
+//			페이지 리스트에 게시되는 페이지 갯수 저장
+			paginationInfo.setPageSize(defaultVO.getPageSize());
+			
+//			FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
+//			FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
+			defaultVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+			
+//											현재 페이지 번호		한 페이지에 게시되는 게시물 건수
+//			LastIndex 공식 lastRecordIndex = getCurrentPageNo() * getRecordCountPerPage();
+			defaultVO.setLastIndex(paginationInfo.getLastRecordIndex());
+			
+//			RecordCountPerPage 한 페이지에 게시되는 게시물 건수
+			defaultVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+			
+//			후기게시판 조회
+			List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
+//			후기게시판 조회 데이터를 저장
+			model.addAttribute("selectAptReviewList", List);
+			
+//			후기게시판 게시물 건수 조회
+			int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
+//			검색된 게시물 건수 paginationInfo 객체에 저장
+			paginationInfo.setTotalRecordCount(totCnt);
+//			paginationInfo 데이터를 저장
+			model.addAttribute("paginationInfo", paginationInfo);
+			
+		
+//			@Controller selectAptReviewList() 아웃로그
+			LOGGER.info("@Controller selectHomeList() Out");
+			
+//			조회 화면으로 이동
+			return "home";
+	}
+	
+	
+	
+	
 	
 	/** 모집공고글 목록 조회(paging)
 	 *  
@@ -74,74 +144,6 @@ public class TBAptReviewController{
 //		@Controller selectAptReviewList() 진입로그
 		LOGGER.info("@Controller selectAptReviewList() In");
 		
-//		유효성 검사
-		
-		/** model 객체 */
-		if(model == null || model.equals("")){
-			LOGGER.info("model == null || model.equals('')");
-		}
-		/** defaultVO 객체 */
-		if(defaultVO == null || defaultVO.equals("")){
-			LOGGER.info("defaultVO == null || defaultVO.equals('')");
-		}else{
-			/** 검색조건 */
-			String searchCondition = defaultVO.getSearchCondition();
-			/** 검색Keyword */
-			String searchKeyword = defaultVO.getSearchKeyword();
-			/** 검색사용여부 */
-			String searchUseYn = defaultVO.getSearchUseYn();
-			/** 현재페이지 */
-			int pageIndex = defaultVO.getPageIndex();
-			/** 페이지갯수 */
-			int pageUnit = defaultVO.getPageUnit();
-			/** 페이지사이즈 */
-			int pageSize = defaultVO.getPageSize();
-			/** firstIndex */
-			int firstIndex = defaultVO.getFirstIndex();
-			/** lastIndex */
-			int lastIndex = defaultVO.getLastIndex();
-			/** recordCountPerPage */
-			int recordCountPerPage = defaultVO.getRecordCountPerPage();
-			
-//			유효성 검사
-			
-			/** 검색조건 */
-			if(searchCondition == null || searchCondition.equals("")){
-				LOGGER.info("searchCondition == null || searchCondition.equals('')");
-			}
-			/** 검색Keyword */
-			if(searchKeyword == null || searchKeyword.equals("")){
-				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
-			}
-			/** 검색사용여부 */
-			if(searchUseYn == null || searchUseYn.equals("")){
-				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
-			}
-			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex < 0){
-				LOGGER.info("pageIndex == 0 || pageIndex < 0");
-			}
-			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit < 0){
-				LOGGER.info("pageUnit == 0 || pageUnit < 0");
-			}
-			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize < 0){
-				LOGGER.info("pageSize == 0 || pageSize < 0");
-			}
-			/** firstIndex */
-			if(firstIndex == 0 || firstIndex < 0){
-				LOGGER.info("firstIndex == 0 || firstIndex < 0");
-			}
-			/** lastIndex */
-			if(lastIndex == 0 || lastIndex < 0){
-				LOGGER.info("lastIndex == 0 || lastIndex < 0");
-			}
-			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage < 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
-			}
-		
 //			pageing setting
 			
 			/** 페이지갯수 */
@@ -151,13 +153,13 @@ public class TBAptReviewController{
 	
 			PaginationInfo paginationInfo = new PaginationInfo();
 //			현재 페이지 번호를 저장
-			paginationInfo.setCurrentPageNo(pageIndex);
+			paginationInfo.setCurrentPageNo(defaultVO.getPageIndex());
 			
 //			한 페이지에 해당되는 게시물 갯수 저장
-			paginationInfo.setRecordCountPerPage(pageUnit);
+			paginationInfo.setRecordCountPerPage(defaultVO.getPageUnit());
 			
 //			페이지 리스트에 게시되는 페이지 갯수 저장
-			paginationInfo.setPageSize(pageSize);
+			paginationInfo.setPageSize(defaultVO.getPageSize());
 			
 //			FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
 //			FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
@@ -169,27 +171,23 @@ public class TBAptReviewController{
 			
 //			RecordCountPerPage 한 페이지에 게시되는 게시물 건수
 			defaultVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		
+
 			
 //			후기게시판 조회
 			List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
-			LOGGER.info("@@ list<defaultVO:   "+List);
-			LOGGER.info("@@ model.addAttribute:   "+model.addAttribute("list", List));
+//			후기게시판 조회 데이터를 저장
+			model.addAttribute("selectAptReviewList", List);
 			
 //			후기게시판 게시물 건수 조회
 			int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
-			
-//			후기게시판 조회 데이터를 저장
-			model.addAttribute("selectAptReviewList", List);
 //			검색된 게시물 건수 paginationInfo 객체에 저장
 			paginationInfo.setTotalRecordCount(totCnt);
 //			paginationInfo 데이터를 저장
 			model.addAttribute("paginationInfo", paginationInfo);
+			
 		
 //			@Controller selectAptReviewList() 아웃로그
 			LOGGER.info("@Controller selectAptReviewList() Out");
-		
-		}//	defaultVO 객체 유효성검사 else End
 			
 //			조회 화면으로 이동
 			return "aptreview/aptReviewList";
@@ -299,9 +297,6 @@ public class TBAptReviewController{
 		return "aptreview/aptReviewRegister";
 		
 	}
-
-	
-	
 	
 	
 	/**
