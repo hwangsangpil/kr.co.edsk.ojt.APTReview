@@ -69,56 +69,25 @@ public class TBAptReviewController{
 	 * @return "aptreview/aptReviewList"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "/selectHomeList.do")
+	@RequestMapping(value = "/home.do")
 //			<form:form commandName="defaultVO">@ModelAttribute("defaultVO")는 같아야한다
-	public String selectHomeList(@ModelAttribute("defaultVO") DefaultVO defaultVO, ModelMap model) throws Exception {
+	public String home(DefaultVO defaultVO, ModelMap model) throws Exception {
 //		@Controller selectAptReviewList() 진입로그
 		LOGGER.info("@Controller selectHomeList() In");
-		
-//			pageing setting
-			
-			/** 페이지갯수 */
-			defaultVO.setPageUnit(propertiesService.getInt("pageUnit"));
-			/** 페이지사이즈 */
-			defaultVO.setPageSize(propertiesService.getInt("pageSize"));
-	
-			PaginationInfo paginationInfo = new PaginationInfo();
-//			현재 페이지 번호를 저장
-			paginationInfo.setCurrentPageNo(defaultVO.getPageIndex());
-			
-//			한 페이지에 해당되는 게시물 갯수 저장
-			paginationInfo.setRecordCountPerPage(defaultVO.getPageUnit());
-			
-//			페이지 리스트에 게시되는 페이지 갯수 저장
-			paginationInfo.setPageSize(defaultVO.getPageSize());
-			
-//			FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
-//			FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
-			defaultVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-			
-//											현재 페이지 번호		한 페이지에 게시되는 게시물 건수
-//			LastIndex 공식 lastRecordIndex = getCurrentPageNo() * getRecordCountPerPage();
-			defaultVO.setLastIndex(paginationInfo.getLastRecordIndex());
-			
-//			RecordCountPerPage 한 페이지에 게시되는 게시물 건수
-			defaultVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-
 			
 //			후기게시판 조회
-			List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
+			List<Map<String,String>> selectAptReviewHomeList = tbAptReviewService.selectAptReviewHomeList(defaultVO);
+			LOGGER.info("List<Map<String,String>>:   "+selectAptReviewHomeList);
 //			후기게시판 조회 데이터를 저장
-			model.addAttribute("selectAptReviewList", List);
+			model.addAttribute("selectAptReviewHomeList", selectAptReviewHomeList);
 			
-//			후기게시판 게시물 건수 조회
-			int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
-//			검색된 게시물 건수 paginationInfo 객체에 저장
-			paginationInfo.setTotalRecordCount(totCnt);
-//			paginationInfo 데이터를 저장
-			model.addAttribute("paginationInfo", paginationInfo);
-			
-		
+//			모집공고 조회
+			List<Map<String,String>> selectAnnouncementHomeList = tbAptReviewService.selectAnnouncementHomeList(defaultVO);
+			LOGGER.info("List<Map<String,String>>:   "+selectAnnouncementHomeList);
+//			모집공고 조회 데이터를 저장
+			model.addAttribute("selectAnnouncementHomeList", selectAnnouncementHomeList);
 //			@Controller selectAptReviewList() 아웃로그
-			LOGGER.info("@Controller selectHomeList() Out");
+			LOGGER.info("@Controller selectHomeList() Out\n");
 			
 //			조회 화면으로 이동
 			return "home";

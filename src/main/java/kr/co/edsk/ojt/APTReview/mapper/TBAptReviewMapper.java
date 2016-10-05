@@ -29,6 +29,10 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper("tbAptReviewMapper")
 public interface TBAptReviewMapper {
 	
+	public List<Map<String, String>> selectAptReviewHomeList(DefaultVO defaultVO) throws Exception;
+	
+	public List<Map<String, String>> selectAnnouncementHomeList(DefaultVO defaultVO) throws Exception;
+	
 	/**
 	 * 후기게시판 전체목록 보기
 	 * @param defaultVO - 조회할 정보가 담긴 DefaultVO

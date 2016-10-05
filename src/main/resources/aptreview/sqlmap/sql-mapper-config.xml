@@ -11,4 +11,4 @@
 		<typeAlias alias="tbBlockCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBBlockCodeVO"/>
 		<typeAlias alias="tbPlanCodeVO" type="kr.co.edsk.ojt.APTReview.vo.TBPlanCodeVO"/>
     </typeAliases>
-</configuration>  
+</configuration>

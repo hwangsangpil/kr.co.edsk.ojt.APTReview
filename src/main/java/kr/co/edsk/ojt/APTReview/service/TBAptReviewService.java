@@ -28,6 +28,10 @@ import kr.co.edsk.ojt.APTReview.vo.TBZoneCodeVO;
 
 public interface TBAptReviewService {
 	
+	public List<Map<String, String>> selectAptReviewHomeList(DefaultVO defaultVO) throws Exception;
+	
+	public List<Map<String, String>> selectAnnouncementHomeList(DefaultVO defaultVO) throws Exception;
+	
 	/**
 	 * 후기게시판 전체목록 보기
 	 * @param defaultVO - 조회할 정보가 담긴 DefaultVO

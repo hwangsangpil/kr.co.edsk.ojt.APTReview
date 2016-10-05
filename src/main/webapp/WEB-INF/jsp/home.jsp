@@ -8,48 +8,10 @@ request.setCharacterEncoding("UTF-8");
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>후기게시판</title>
+<title>APT Review HOME</title>
 <%@ include file="include/inc_header.jsp"%>
 <script type="text/javascript">
 
-/* 입력결과 확인 */
-if('${insertResult}'>=1){
-	alert("입력을 완료 했습니다.");
-}
-
-/* 수정결과 확인 */
-if('${updateResult}'>=1){
-	alert("수정을 완료 했습니다.");
-}
-
-/* 삭제결과 확인 */
-if('${deleteResult}'>=1){
-	alert("삭제를 완료 했습니다.");
-}else if('${deleteResult}'==-1){
-	alert("삭제를 실패 했습니다.");
-	/* history.back(); */
-}
-
-/* 검색 */
-function searchAptReview(){
-var searchKeyword = document.getElementById("searchKeyword").value;
-document.aptReviewList.submit();
-}
-	
-/* 게시글 등록 */
-function insertAptReview(){
-document.aptReviewList.method = "post";
-document.aptReviewList.action = "/insertAptReviewForm.do";
-document.aptReviewList.submit();
-}
-	
-/* pagination 페이지 링크 function */
-function fn_egov_link_page(pageNo){
-document.aptReviewList.pageIndex.value = pageNo;
-document.aptReviewList.action = "<c:url value='/selectAptReviewList.do'/>";
-document.aptReviewList.submit();
-}
-	
 /* 상세페이지 이동 */
 function selectAptReviewView(aptReviewNo){
 	document.getElementById('aptReviewNo').value = aptReviewNo
@@ -75,41 +37,33 @@ function selectAptReviewView(aptReviewNo){
        <!--BEGIN CONTENT-->
        <div class="page-content">
         <!-- commandName == @ModelAttribute(값) -->
-        <form:form commandName="defaultVO"  name="aptReviewList" method="post">
+        <form name="aptReviewList" method="post">
         <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="0">
-         <div id="tab-general">
-          <div class="row mbl">
-           <div class="col-lg-12">
+         
+          
+           
             <div class="row">
              <div class="col-lg-12">
              
              
-              <div class="panel panel-yellow" style="width: 48.9%; float: left;">
+              <div class="panel panel-yellow" style="width: 35%; float: left; height: 60%; margin-top: 50px; margin-left: 90px;">
                <div class="panel-heading" style="text-align:center;">모집공고 목록</div>
                <div class="mbl"></div>
-               <div class="col-lg-8">&nbsp;</div>
-               <div class="col-lg-12">&nbsp;</div>
-               <div class="col-lg-12">&nbsp;</div>
-                <div class="panel-body" style="overflow: auto;">
+               
+                <div class="panel-body" style="overflow: auto; padding-right: 10px; padding-left: 10px;">
                  <table class="table table-hover">
                   <thead>
                    <tr>
-                   	<th style="text-align:center; width: 50px;">NO</th>
-                   	<th style="text-align:center; width: 200px;">지역</th>
-                    <th style="text-align:center; width: 150px;">단지</th>
-                    <th style="text-align:center; width: 150px;">제목</th>
-                    <th style="text-align:center; width: 150px;">작성일</th>
+                    <th style="text-align:center;">제목</th>
+                    <th style="text-align:center;">작성일</th>
                    </tr>
                   </thead>
                   <tbody>
-                   <c:forEach items="${selectAptReviewList}" var="dto">
+                   <c:forEach items="${selectAnnouncementHomeList}" var="selectAnnouncementHomeList">
                 	<%-- <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${dto.aptReviewNo}"/> --%>
-                    <tr  style="cursor: pointer;" onclick="selectAptReviewView(${dto.aptReviewNo});">
-                     <td style="text-align:center;">${dto.aptReviewNo}</td>
-                     <td style="text-align:center;">${dto.aptZoneCodeValue}</td>
-                     <td style="text-align:center;">${dto.aptBlockCodeValue}</td>
-                     <td style="text-align:left;">${dto.aptReviewTitle}</td>
-                     <td style="text-align:center;">${dto.aptReviewCreateDate}</td>
+                    <tr  style="cursor: pointer;" onclick="selectAptReviewView(${selectAnnouncementHomeList.ANNOUNCEMENT_NO});">
+                     <td style="text-align:left;">${selectAnnouncementHomeList.ANNOUNCEMENT_NAME}</td>
+                     <td style="text-align:center;">${selectAnnouncementHomeList.ANNOUNCEMENT_CREATE_DATE}</td>
                     </tr>
                    </c:forEach>
                   </tbody>
@@ -119,32 +73,23 @@ function selectAptReviewView(aptReviewNo){
               </div>
               
               
-              <div class="panel panel-yellow" style="width: 48.9%; float: right;">
+              <div class="panel panel-yellow" style="width: 35%; float: right; height: 60%; margin-top: 50px; margin-right: 90px;">
                <div class="panel-heading" style="text-align:center;">후기게시판 목록</div>
                <div class="mbl"></div>
-               <div class="col-lg-8">&nbsp;</div>
-               <div class="col-lg-12">&nbsp;</div>
-               <div class="col-lg-12">&nbsp;</div>
-                <div class="panel-body" style="overflow: auto;">
+                <div class="panel-body" style="overflow: auto; padding-right: 10px; padding-left: 10px;">
                  <table class="table table-hover">
                   <thead>
                    <tr>
-                    <th style="text-align:center; width: 50px;">NO</th>
-                    <th style="text-align:center; width: 200px;">지역</th>
-                    <th style="text-align:center; width: 150px;">단지</th>
-                    <th style="text-align:center; width: 150px;">제목</th>
-                    <th style="text-align:center; width: 150px;">작성일</th>
+                    <th style="text-align:center;">제목</th>
+                    <th style="text-align:center;">작성일</th>
                    </tr>
                   </thead>
                   <tbody>
-                   <c:forEach items="${selectAptReviewList}" var="dto">
+                   <c:forEach items="${selectAptReviewHomeList}" var="selectAptReviewHomeList">
                 	<%-- <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${dto.aptReviewNo}"/> --%>
-                    <tr  style="cursor: pointer;" onclick="selectAptReviewView(${dto.aptReviewNo});">
-                     <td style="text-align:center;">${dto.aptReviewNo}</td>
-                     <td style="text-align:center;">${dto.aptZoneCodeValue}</td>
-                     <td style="text-align:center;">${dto.aptBlockCodeValue}</td>
-                     <td style="text-align:left;">${dto.aptReviewTitle}</td>
-                     <td style="text-align:center;">${dto.aptReviewCreateDate}</td>
+                    <tr  style="cursor: pointer;" onclick="selectAptReviewView(${selectAptReviewHomeList.APT_REVIEW_NO});">
+                     <td style="text-align:left;">${selectAptReviewHomeList.APT_REVIEW_TITLE}</td>
+                     <td style="text-align:center;">${selectAptReviewHomeList.APT_REVIEW_CREATE_DATE}</td>
                     </tr>
                    </c:forEach>
                   </tbody>
@@ -155,10 +100,10 @@ function selectAptReviewView(aptReviewNo){
               
              </div>
             </div>
-           </div>
-          </div>
-         </div>
-        </form:form>
+           
+          
+         
+        </form>
        </div>
        <!--END CONTENT-->
       </div>
