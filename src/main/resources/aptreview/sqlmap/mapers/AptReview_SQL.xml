@@ -67,7 +67,7 @@
 		AND
 		TB_APT_REVIEW.MEMBER_NO = TB_MEMBER.MEMBER_NO
 		ORDER BY APT_REVIEW_GROUP DESC, APT_REVIEW_DEPTH, APT_REVIEW_NUM
-		LIMIT #{recordCountPerPage} OFFSET #{firstIndex};
+		LIMIT #{recordCountPerPage};
 
 	</select>
 	
@@ -85,7 +85,7 @@
 		FROM
 		TB_ANNOUNCEMENT 
 		ORDER BY ANNOUNCEMENT_NO DESC
-		LIMIT #{recordCountPerPage} OFFSET #{firstIndex};
+		LIMIT #{recordCountPerPage};
 
 	</select>
 	

@@ -14,12 +14,19 @@ request.setCharacterEncoding("UTF-8");
 
 /* 상세페이지 이동 */
 function selectAptReviewView(aptReviewNo){
-	document.getElementById('aptReviewNo').value = aptReviewNo
-	document.aptReviewList.method = "post";
-   	document.aptReviewList.action = "/selectAptReviewView.do";
-   	document.aptReviewList.submit();
+	document.getElementById('aptReviewNo').value = aptReviewNo;
+	document.aptReviewHomeList.method = "post";
+   	document.aptReviewHomeList.action = "/selectAptReviewView.do";
+   	document.aptReviewHomeList.submit();
 }
-	
+
+/* 모집공고 상세페이지 이동 */
+function selectAnnouncementView(announcementNo){
+	document.getElementById('announcementNo').value = announcementNo;
+	document.aptReviewHomeList.method = "post";
+	document.aptReviewHomeList.action = "/selectAnnouncementView.do";
+	document.aptReviewHomeList.submit();
+}
 </script>
 
 </head>
@@ -33,23 +40,17 @@ function selectAptReviewView(aptReviewNo){
     <%@ include file="include/inc_left_menu.jsp"%>
      <!--END SIDEBAR MENU-->
      <div id="page-wrapper">
-
        <!--BEGIN CONTENT-->
        <div class="page-content">
         <!-- commandName == @ModelAttribute(값) -->
-        <form name="aptReviewList" method="post">
+        <form name="aptReviewHomeList" method="post">
         <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="0">
-         
-          
-           
+        <input type="hidden" id="announcementNo" name="announcementNo" value="0">
             <div class="row">
              <div class="col-lg-12">
-             
-             
-              <div class="panel panel-yellow" style="width: 35%; float: left; height: 60%; margin-top: 50px; margin-left: 90px;">
+              <div class="panel panel-yellow" style="width: 38%; float: left; height: 60%; margin-top: 50px; margin-left: 90px;">
                <div class="panel-heading" style="text-align:center;">모집공고 목록</div>
                <div class="mbl"></div>
-               
                 <div class="panel-body" style="overflow: auto; padding-right: 10px; padding-left: 10px;">
                  <table class="table table-hover">
                   <thead>
@@ -60,8 +61,7 @@ function selectAptReviewView(aptReviewNo){
                   </thead>
                   <tbody>
                    <c:forEach items="${selectAnnouncementHomeList}" var="selectAnnouncementHomeList">
-                	<%-- <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${dto.aptReviewNo}"/> --%>
-                    <tr  style="cursor: pointer;" onclick="selectAptReviewView(${selectAnnouncementHomeList.ANNOUNCEMENT_NO});">
+                    <tr  style="cursor: pointer;" onclick="selectAnnouncementView(${selectAnnouncementHomeList.ANNOUNCEMENT_NO});">
                      <td style="text-align:left;">${selectAnnouncementHomeList.ANNOUNCEMENT_NAME}</td>
                      <td style="text-align:center;">${selectAnnouncementHomeList.ANNOUNCEMENT_CREATE_DATE}</td>
                     </tr>
@@ -71,9 +71,7 @@ function selectAptReviewView(aptReviewNo){
                 </div>
                 <!-- /List -->
               </div>
-              
-              
-              <div class="panel panel-yellow" style="width: 35%; float: right; height: 60%; margin-top: 50px; margin-right: 90px;">
+              <div class="panel panel-yellow" style="width: 38%; float: right; height: 60%; margin-top: 50px; margin-right: 90px;">
                <div class="panel-heading" style="text-align:center;">후기게시판 목록</div>
                <div class="mbl"></div>
                 <div class="panel-body" style="overflow: auto; padding-right: 10px; padding-left: 10px;">
@@ -86,7 +84,6 @@ function selectAptReviewView(aptReviewNo){
                   </thead>
                   <tbody>
                    <c:forEach items="${selectAptReviewHomeList}" var="selectAptReviewHomeList">
-                	<%-- <input type="hidden" id="aptReviewNo" name="aptReviewNo" value="${dto.aptReviewNo}"/> --%>
                     <tr  style="cursor: pointer;" onclick="selectAptReviewView(${selectAptReviewHomeList.APT_REVIEW_NO});">
                      <td style="text-align:left;">${selectAptReviewHomeList.APT_REVIEW_TITLE}</td>
                      <td style="text-align:center;">${selectAptReviewHomeList.APT_REVIEW_CREATE_DATE}</td>
@@ -97,12 +94,8 @@ function selectAptReviewView(aptReviewNo){
                 </div>
                 <!-- /List -->
               </div>
-              
              </div>
             </div>
-           
-          
-         
         </form>
        </div>
        <!--END CONTENT-->

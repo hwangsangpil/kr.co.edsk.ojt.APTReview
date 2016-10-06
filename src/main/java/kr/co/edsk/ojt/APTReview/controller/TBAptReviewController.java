@@ -59,38 +59,41 @@ public class TBAptReviewController{
 	
 
 	
-	/** 모집공고글 목록 조회(paging)
-	 *  
-	 * @param defaultVO - 조회할 정보가 담긴 DefaultVO
+	/** 홈 목록 조회
+	 * @param defaultVO - 페이지 정보가 담긴 DefaultVO
 	 * @param model
-	 * 					Model → Interface , ModelMap → 구현체
+	 *	 				Model → Interface , ModelMap → 구현체
 	 * 					Spring @mvc 이전에는 ModelAndView를 통해서 뷰 페이지를 전달
-						Spring @mvc 이후에는 Model or ModelMap를 사용한다.
-	 * @return "aptreview/aptReviewList"
-	 * @exception Exception
+	 *					Spring @mvc 이후에는 Model or ModelMap를 사용한다.
+	 * @return home
+	 * @throws Exception
 	 */
-	@RequestMapping(value = "/home.do")
-//			<form:form commandName="defaultVO">@ModelAttribute("defaultVO")는 같아야한다
-	public String home(DefaultVO defaultVO, ModelMap model) throws Exception {
-//		@Controller selectAptReviewList() 진입로그
+	@RequestMapping(value = "/selectHomeList.do")
+	public String selectHomeList(DefaultVO defaultVO, ModelMap model, Map map) throws Exception {
+//		@Controller selectHomeList() 진입로그
 		LOGGER.info("@Controller selectHomeList() In");
 			
-//			후기게시판 조회
-			List<Map<String,String>> selectAptReviewHomeList = tbAptReviewService.selectAptReviewHomeList(defaultVO);
-			LOGGER.info("List<Map<String,String>>:   "+selectAptReviewHomeList);
-//			후기게시판 조회 데이터를 저장
-			model.addAttribute("selectAptReviewHomeList", selectAptReviewHomeList);
+//		모델 또는 맵에서 데이터를 가지고와서 파라미터로 사용할 수 있는지 알아보기
+//		위처럼 사용하는게 좋은지 받아온 객체를 바로 사용하는게 좋은지 알아보기
+		
+		LOGGER.debug("model:  "+model);
+		LOGGER.debug("defaultVO: "+defaultVO);
+		LOGGER.debug("map: "+map);
+//		후기게시판 조회
+		List<Map<String,String>> selectAptReviewHomeList = tbAptReviewService.selectAptReviewHomeList(defaultVO);
+//		후기게시판 조회 데이터를 저장
+		model.addAttribute("selectAptReviewHomeList", selectAptReviewHomeList);
 			
-//			모집공고 조회
-			List<Map<String,String>> selectAnnouncementHomeList = tbAptReviewService.selectAnnouncementHomeList(defaultVO);
-			LOGGER.info("List<Map<String,String>>:   "+selectAnnouncementHomeList);
-//			모집공고 조회 데이터를 저장
-			model.addAttribute("selectAnnouncementHomeList", selectAnnouncementHomeList);
-//			@Controller selectAptReviewList() 아웃로그
-			LOGGER.info("@Controller selectHomeList() Out\n");
+//		모집공고 조회
+		List<Map<String,String>> selectAnnouncementHomeList = tbAptReviewService.selectAnnouncementHomeList(defaultVO);
+//		모집공고 조회 데이터를 저장
+		model.addAttribute("selectAnnouncementHomeList", selectAnnouncementHomeList);
 			
-//			조회 화면으로 이동
-			return "home";
+//		@Controller selectHomeList() 아웃로그
+		LOGGER.info("@Controller selectHomeList() Out\n");
+			
+//		조회 화면으로 이동
+		return "home";
 	}
 	
 	
@@ -101,9 +104,6 @@ public class TBAptReviewController{
 	 *  
 	 * @param defaultVO - 조회할 정보가 담긴 DefaultVO
 	 * @param model
-	 * 					Model → Interface , ModelMap → 구현체
-	 * 					Spring @mvc 이전에는 ModelAndView를 통해서 뷰 페이지를 전달
-						Spring @mvc 이후에는 Model or ModelMap를 사용한다.
 	 * @return "aptreview/aptReviewList"
 	 * @exception Exception
 	 */
@@ -112,55 +112,247 @@ public class TBAptReviewController{
 	public String selectAptReviewList(@ModelAttribute("defaultVO") DefaultVO defaultVO, ModelMap model) throws Exception {
 //		@Controller selectAptReviewList() 진입로그
 		LOGGER.info("@Controller selectAptReviewList() In");
+
+//		유효성 검사
 		
-//			pageing setting
-			
+		/** model 객체 */
+		if(model == null || model.equals("")){
+			LOGGER.info("model == null || model.equals('')");
+		}
+		/** defaultVO 객체 */
+		if(defaultVO == null || defaultVO.equals("")){
+			LOGGER.info("defaultVO == null || defaultVO.equals('')");
+		}else{
+			/** 검색조건 */
+			String searchCondition = defaultVO.getSearchCondition();
+			/** 검색Keyword */
+			String searchKeyword = defaultVO.getSearchKeyword();
+			/** 검색사용여부 */
+			String searchUseYn = defaultVO.getSearchUseYn();
+			/** 현재페이지 */
+			int pageIndex = defaultVO.getPageIndex();
 			/** 페이지갯수 */
-			defaultVO.setPageUnit(propertiesService.getInt("pageUnit"));
+			int pageUnit = defaultVO.getPageUnit();
 			/** 페이지사이즈 */
-			defaultVO.setPageSize(propertiesService.getInt("pageSize"));
+			int pageSize = defaultVO.getPageSize();
+			/** firstIndex */
+			int firstIndex = defaultVO.getFirstIndex();
+			/** lastIndex */
+			int lastIndex = defaultVO.getLastIndex();
+			/** recordCountPerPage */
+			int recordCountPerPage = defaultVO.getRecordCountPerPage();
+			
+//			유효성 검사
+			
+			/** 검색조건 */
+			if(searchCondition == null || searchCondition.equals("")){
+				LOGGER.info("searchCondition == null || searchCondition.equals('')");
+			}
+			/** 검색Keyword */
+			if(searchKeyword == null || searchKeyword.equals("")){
+				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
+			}
+			/** 검색사용여부 */
+			if(searchUseYn == null || searchUseYn.equals("")){
+				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
+			}
+			/** 현재페이지 */
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
+			}
+			/** 페이지갯수 */
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
+			}
+			/** 페이지사이즈 */
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
+			}
+			/** firstIndex */
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
+			}
+			/** lastIndex */
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
+			}
+			/** recordCountPerPage */
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
+			}
+		}	
+		/** defaultVO 객체 유효성검사 else End */		
+		
+		
+		
+		
+//		pageing setting
+		
+		/** 페이지갯수 */
+		defaultVO.setPageUnit(propertiesService.getInt("pageUnit"));
+		/** 페이지사이즈 */
+		defaultVO.setPageSize(propertiesService.getInt("pageSize"));
 	
-			PaginationInfo paginationInfo = new PaginationInfo();
-//			현재 페이지 번호를 저장
-			paginationInfo.setCurrentPageNo(defaultVO.getPageIndex());
+		PaginationInfo paginationInfo = new PaginationInfo();
+//		현재 페이지 번호를 저장
+		paginationInfo.setCurrentPageNo(defaultVO.getPageIndex());
 			
-//			한 페이지에 해당되는 게시물 갯수 저장
-			paginationInfo.setRecordCountPerPage(defaultVO.getPageUnit());
+//		한 페이지에 해당되는 게시물 갯수 저장
+		paginationInfo.setRecordCountPerPage(defaultVO.getPageUnit());
 			
-//			페이지 리스트에 게시되는 페이지 갯수 저장
-			paginationInfo.setPageSize(defaultVO.getPageSize());
+//		페이지 리스트에 게시되는 페이지 갯수 저장
+		paginationInfo.setPageSize(defaultVO.getPageSize());
 			
-//			FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
-//			FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
-			defaultVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+//		FirstIndex ~ LastIndex까지 보여줌		현재 페이지 번호				한 페이지에 게시되는 게시물 건수
+//		FirstIndex 공식 firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
+		defaultVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 			
-//											현재 페이지 번호		한 페이지에 게시되는 게시물 건수
-//			LastIndex 공식 lastRecordIndex = getCurrentPageNo() * getRecordCountPerPage();
-			defaultVO.setLastIndex(paginationInfo.getLastRecordIndex());
+//										현재 페이지 번호		한 페이지에 게시되는 게시물 건수
+//		LastIndex 공식 lastRecordIndex = getCurrentPageNo() * getRecordCountPerPage();
+		defaultVO.setLastIndex(paginationInfo.getLastRecordIndex());
 			
-//			RecordCountPerPage 한 페이지에 게시되는 게시물 건수
+//		RecordCountPerPage 한 페이지에 게시되는 게시물 건수
 			defaultVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
 			
-//			후기게시판 조회
-			List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
-//			후기게시판 조회 데이터를 저장
-			model.addAttribute("selectAptReviewList", List);
+//		후기게시판 조회
+		List<DefaultVO> List = tbAptReviewService.selectAptReviewList(defaultVO);
+//		후기게시판 조회 데이터를 저장
+		model.addAttribute("selectAptReviewList", List);
 			
-//			후기게시판 게시물 건수 조회
-			int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
-//			검색된 게시물 건수 paginationInfo 객체에 저장
-			paginationInfo.setTotalRecordCount(totCnt);
-//			paginationInfo 데이터를 저장
-			model.addAttribute("paginationInfo", paginationInfo);
+//		후기게시판 게시물 건수 조회
+		int totCnt = tbAptReviewService.selectAptReviewListTotalCount(defaultVO);
+//		검색된 게시물 건수 paginationInfo 객체에 저장
+		paginationInfo.setTotalRecordCount(totCnt);
+//		paginationInfo 데이터를 저장
+		model.addAttribute("paginationInfo", paginationInfo);
 			
 		
-//			@Controller selectAptReviewList() 아웃로그
-			LOGGER.info("@Controller selectAptReviewList() Out");
+//		@Controller selectAptReviewList() 아웃로그
+		LOGGER.info("@Controller selectAptReviewList() Out");
 			
-//			조회 화면으로 이동
-			return "aptreview/aptReviewList";
+//		조회 화면으로 이동
+		return "aptreview/aptReviewList";
 	}
+	
+	
+	
+	
+	
+	/**
+	 * 후기게시판 상세 게시글을 조회한다.
+	 * @param defaultVO - 목록 조회조건 정보가 담긴 VO
+	 * @param aptReviewNo  - 상세조회 기준 번호
+	 * @return "aptreview/aptReviewListView"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "/selectAptReviewView.do", method = RequestMethod.POST)
+	public String selectAptReviewView(DefaultVO defaultVO, ModelMap model, int aptReviewNo, Map map, TBAptReviewVO aptReviewVO) throws Exception {
+//		@RequestMapping selectAptReviewView() 진입로그
+		LOGGER.info("@RequestMapping selectAptReviewView() In");
+		LOGGER.debug("model:  "+model);
+		LOGGER.debug("defaultVO: "+defaultVO);
+		LOGGER.debug("map: "+map);
+		LOGGER.debug("aptReviewVO: "+aptReviewVO);
+//		유효성 검사
+		
+		/** 현재페이지 번호 */
+		if(aptReviewNo == 0 || aptReviewNo < 0){
+			LOGGER.info("aptReviewNo == 0 || aptReviewNo < 0");
+		}
+		/** model 객체 */
+		if(model == null || model.equals("")){
+			LOGGER.info("model == null || model.equals('')");
+		}
+		/** defaultVO 객체 */
+		if(defaultVO == null || defaultVO.equals("")){
+			LOGGER.info("defaultVO == null || defaultVO.equals('')");
+		}else{
+			/** 검색조건 */
+			String searchCondition = defaultVO.getSearchCondition();
+			/** 검색Keyword */
+			String searchKeyword = defaultVO.getSearchKeyword();
+			/** 검색사용여부 */
+			String searchUseYn = defaultVO.getSearchUseYn();
+			/** 현재페이지 */
+			int pageIndex = defaultVO.getPageIndex();
+			/** 페이지갯수 */
+			int pageUnit = defaultVO.getPageUnit();
+			/** 페이지사이즈 */
+			int pageSize = defaultVO.getPageSize();
+			/** firstIndex */
+			int firstIndex = defaultVO.getFirstIndex();
+			/** lastIndex */
+			int lastIndex = defaultVO.getLastIndex();
+			/** recordCountPerPage */
+			int recordCountPerPage = defaultVO.getRecordCountPerPage();
+			
+//			유효성 검사
+			
+			/** 검색조건 */
+			if(searchCondition == null || searchCondition.equals("")){
+				LOGGER.info("searchCondition == null || searchCondition.equals('')");
+			}
+			/** 검색Keyword */
+			if(searchKeyword == null || searchKeyword.equals("")){
+				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
+			}
+			/** 검색사용여부 */
+			if(searchUseYn == null || searchUseYn.equals("")){
+				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
+			}
+			/** 현재페이지 */
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.info("pageIndex == 0 || pageIndex < 0");
+			}
+			/** 페이지갯수 */
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.info("pageUnit == 0 || pageUnit < 0");
+			}
+			/** 페이지사이즈 */
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.info("pageSize == 0 || pageSize < 0");
+			}
+			/** firstIndex */
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.info("firstIndex == 0 || firstIndex < 0");
+			}
+			/** lastIndex */
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.info("lastIndex == 0 || lastIndex < 0");
+			}
+			/** recordCountPerPage */
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
+			}
+		}	
+		/** defaultVO 객체 유효성검사 else End */
+		
+		LOGGER.info("defaultVO.getPageIndex() In");
+		
+		LOGGER.info(""+aptReviewNo+" 번째 게시글 상세보기");
+	
+//		모집공고번호 기준 데이터 조회
+//		List<?> List = tbAptReviewService.selectAptReviewView(aptReviewNo);
+		
+		HashMap<?, ?> Map = tbAptReviewService.selectAptReviewView(aptReviewNo);
+		LOGGER.info("@@List<?> List:  "+Map);
+		LOGGER.info("@@List<?> List0:  "+Map);
+//		LOGGER.info("@@List<?> List1:  "+List.get(1));
+//		LOGGER.info("@@List<?> List2:  "+List.get(2));
+		LOGGER.info("@@model.addAttribute:  "+model.addAttribute("List",Map));
+//		모집공고번호 기준 데이터 저장
+		model.addAttribute("selectAptReviewView", Map);
+
+//		페이지 정보 저장
+		model.addAttribute("defaultVO", defaultVO);
+		
+//		@RequestMapping selectAptReviewView() 아웃로그
+		LOGGER.info("@RequestMapping selectAptReviewView() Out");
+		
+//		상세조회 페이지 이동
+		return "aptreview/aptReviewListView";
+	}	
 	
 	
 	
@@ -173,7 +365,7 @@ public class TBAptReviewController{
 	 * @return "aptReviewRegister"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "/insertAptReviewForm.do")
+	@RequestMapping(value = "/insertAptReviewForm.do", method = RequestMethod.POST)
 	public String insertAptReviewForm(DefaultVO defaultVO, ModelMap model) throws Exception {
 //		@Controller insertAptReviewForm() 진입로그
 		LOGGER.info("@Controller insertAptReviewForm() In");
@@ -489,7 +681,7 @@ public class TBAptReviewController{
 	 * @return "aptReviewRegister"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "/insertAptReviewReplyForm.do")
+	@RequestMapping(value = "/insertAptReviewReplyForm.do", method = RequestMethod.POST)
 	public String insertAptReviewReplyForm(DefaultVO defaultVO, ModelMap model, int aptReviewNo) throws Exception {
 //		@Controller insertAptReviewReplyForm() 진입로그
 		LOGGER.info("@Controller insertAptReviewReplyForm() In:  "+ aptReviewNo);
@@ -813,7 +1005,7 @@ public class TBAptReviewController{
 	 * @return "aptReviewRegister"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "/updateAptReviewForm.do")
+	@RequestMapping(value = "/updateAptReviewForm.do", method = RequestMethod.POST)
 	public String updateAptReviewForm(DefaultVO defaultVO, ModelMap model, int aptReviewNo) throws Exception {
 //		@RequestMapping updateAptReviewForm() 진입로그
 		LOGGER.info("@RequestMapping updateAptReviewForm() in");
@@ -1137,7 +1329,7 @@ public class TBAptReviewController{
 	 * @return "forward:/selectAptReviewList.do"
 	 * @exception Exception
 	 */
-	@RequestMapping("/deleteAptReview.do")
+	@RequestMapping(value = "/deleteAptReview.do", method = RequestMethod.POST)
 	public String deleteAptReview(DefaultVO defaultVO, ModelMap model, int aptReviewNo) throws Exception {
 //		@RequestMapping deleteAptReview() 진입로그
 		LOGGER.info("@RequestMapping deleteAptReview() In" + aptReviewNo);
@@ -1254,128 +1446,18 @@ public class TBAptReviewController{
 	
 	
 	
-	/**
-	 * 모집공고 상세 게시글을 조회한다.
-	 * @param defaultVO - 목록 조회조건 정보가 담긴 VO
-	 * @param aptReviewNo  - 상세조회 기준 번호
-	 * @return "aptReviewListView""
-	 * @exception Exception
-	 */
-	@RequestMapping(value = "/selectAptReviewView.do")
-	public String selectAptReviewView(DefaultVO defaultVO, ModelMap model, int aptReviewNo) throws Exception {
-//		@RequestMapping selectAptReviewView() 진입로그
-		LOGGER.info("@RequestMapping selectAptReviewView() In");
-		
-//		유효성 검사
-		
-		/** 현재페이지 번호 */
-		if(aptReviewNo == 0 || aptReviewNo < 0){
-			LOGGER.info("aptReviewNo == 0 || aptReviewNo < 0");
-		}
-		/** model 객체 */
-		if(model == null || model.equals("")){
-			LOGGER.info("model == null || model.equals('')");
-		}
-		/** defaultVO 객체 */
-		if(defaultVO == null || defaultVO.equals("")){
-			LOGGER.info("defaultVO == null || defaultVO.equals('')");
-		}else{
-			/** 검색조건 */
-			String searchCondition = defaultVO.getSearchCondition();
-			/** 검색Keyword */
-			String searchKeyword = defaultVO.getSearchKeyword();
-			/** 검색사용여부 */
-			String searchUseYn = defaultVO.getSearchUseYn();
-			/** 현재페이지 */
-			int pageIndex = defaultVO.getPageIndex();
-			/** 페이지갯수 */
-			int pageUnit = defaultVO.getPageUnit();
-			/** 페이지사이즈 */
-			int pageSize = defaultVO.getPageSize();
-			/** firstIndex */
-			int firstIndex = defaultVO.getFirstIndex();
-			/** lastIndex */
-			int lastIndex = defaultVO.getLastIndex();
-			/** recordCountPerPage */
-			int recordCountPerPage = defaultVO.getRecordCountPerPage();
-			
-//			유효성 검사
-			
-			/** 검색조건 */
-			if(searchCondition == null || searchCondition.equals("")){
-				LOGGER.info("searchCondition == null || searchCondition.equals('')");
-			}
-			/** 검색Keyword */
-			if(searchKeyword == null || searchKeyword.equals("")){
-				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
-			}
-			/** 검색사용여부 */
-			if(searchUseYn == null || searchUseYn.equals("")){
-				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
-			}
-			/** 현재페이지 */
-			if(pageIndex == 0 || pageIndex < 0){
-				LOGGER.info("pageIndex == 0 || pageIndex < 0");
-			}
-			/** 페이지갯수 */
-			if(pageUnit == 0 || pageUnit < 0){
-				LOGGER.info("pageUnit == 0 || pageUnit < 0");
-			}
-			/** 페이지사이즈 */
-			if(pageSize == 0 || pageSize < 0){
-				LOGGER.info("pageSize == 0 || pageSize < 0");
-			}
-			/** firstIndex */
-			if(firstIndex == 0 || firstIndex < 0){
-				LOGGER.info("firstIndex == 0 || firstIndex < 0");
-			}
-			/** lastIndex */
-			if(lastIndex == 0 || lastIndex < 0){
-				LOGGER.info("lastIndex == 0 || lastIndex < 0");
-			}
-			/** recordCountPerPage */
-			if(recordCountPerPage == 0 || recordCountPerPage < 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
-			}
-		}	
-		/** defaultVO 객체 유효성검사 else End */
-		
-		LOGGER.info("defaultVO.getPageIndex() In");
-		
-		LOGGER.info(""+aptReviewNo+" 번째 게시글 상세보기");
 	
-//		모집공고번호 기준 데이터 조회
-//		List<?> List = tbAptReviewService.selectAptReviewView(aptReviewNo);
-		
-		HashMap<?, ?> Map = tbAptReviewService.selectAptReviewView(aptReviewNo);
-		LOGGER.info("@@List<?> List:  "+Map);
-		LOGGER.info("@@List<?> List0:  "+Map);
-//		LOGGER.info("@@List<?> List1:  "+List.get(1));
-//		LOGGER.info("@@List<?> List2:  "+List.get(2));
-		LOGGER.info("@@model.addAttribute:  "+model.addAttribute("List",Map));
-//		모집공고번호 기준 데이터 저장
-		model.addAttribute("selectAptReviewView", Map);
-
-//		페이지 정보 저장
-		model.addAttribute("defaultVO", defaultVO);
-		
-//		@RequestMapping selectAptReviewView() 아웃로그
-		LOGGER.info("@RequestMapping selectAptReviewView() Out");
-		
-//		상세조회 페이지 이동
-		return "aptreview/aptReviewListView";
-	}
 
 	
 	
-	@RequestMapping(value = "/ajaxTest.do")
+	@RequestMapping(value = "/ajaxTest.do", method = RequestMethod.POST)
 	public @ResponseBody JSONObject ajaxTest(@RequestParam Map<String, String> aptZoneCode) throws Exception{
 		LOGGER.info("@RequestMapping test() In:   "+aptZoneCode);
 
 		JSONObject result = new JSONObject();
-		String resultCode = "";
-		String resultMsg = "";
-		Object[] args = null;
+//		String resultCode = "";
+//		String resultMsg = "";
+//		Object[] args = null;
 		
 		String aptBlockCode = tbAptReviewService.selectBlockCode2(aptZoneCode);
 		String aptBlockCodeValue = tbAptReviewService.selectBlockCodeValue(aptZoneCode);
@@ -1387,14 +1469,14 @@ public class TBAptReviewController{
 	}
 
 	
-	@RequestMapping(value = "/aptPlanImage.do")
+	@RequestMapping(value = "/aptPlanImage.do", method = RequestMethod.POST)
 	public @ResponseBody JSONObject aptPlanImage(@RequestParam Map<String, String> aptBlockCodeValue) throws Exception{
 		LOGGER.info("@RequestMapping test() In:   "+aptBlockCodeValue);
 
 		JSONObject result = new JSONObject();
-		String resultCode = "";
-		String resultMsg = "";
-		Object[] args = null;
+//		String resultCode = "";
+//		String resultMsg = "";
+//		Object[] args = null;
 		
 		String aptPlanCodeValue = tbAptReviewService.selectPlanCodeValue();
 		result.put("aptPlanCodeValue", aptPlanCodeValue);
@@ -1404,7 +1486,7 @@ public class TBAptReviewController{
 		return result;
 	}
 	
-//	@RequestMapping(value = "/ajaxTest.do")
+//	@RequestMapping(value = "/ajaxTest.do", method = RequestMethod.POST)
 //	public @ResponseBody String ajaxTest(@RequestParam("aptZoneCode") String params) throws Exception{
 //		LOGGER.info("@RequestMapping test() In:   "+params);
 //		
@@ -1417,7 +1499,7 @@ public class TBAptReviewController{
 //	}
 	
 
-//	@RequestMapping(value = "/ajaxTest.do")
+//	@RequestMapping(value = "/ajaxTest.do", method = RequestMethod.POST)
 //	public @ResponseBody TBBlockCodeVO ajaxTest(@RequestParam("aptZoneCode") TBBlockCodeVO params) throws Exception{
 //		LOGGER.info("@RequestMapping test() In:   "+params);
 //

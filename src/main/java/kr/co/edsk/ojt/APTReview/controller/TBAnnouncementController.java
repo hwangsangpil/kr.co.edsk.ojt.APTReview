@@ -17,14 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springmodules.validation.commons.DefaultBeanValidator;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -53,10 +50,6 @@ public class TBAnnouncementController{
 	/** EgovPropertyService */
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
-
-	/** Validator */
-/*	@Resource(name = "beanValidator")
-	protected DefaultBeanValidator beanValidator;*/
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TBAnnouncementController.class);
 
