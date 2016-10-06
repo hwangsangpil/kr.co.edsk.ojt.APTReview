@@ -69,16 +69,98 @@ public class TBAptReviewController{
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectHomeList.do")
-	public String selectHomeList(DefaultVO defaultVO, ModelMap model, Map map) throws Exception {
+	public String selectHomeList(DefaultVO defaultVO, ModelMap model, Map<String,String> map) throws Exception {
 //		@Controller selectHomeList() 진입로그
 		LOGGER.info("@Controller selectHomeList() In");
 			
 //		모델 또는 맵에서 데이터를 가지고와서 파라미터로 사용할 수 있는지 알아보기
 //		위처럼 사용하는게 좋은지 받아온 객체를 바로 사용하는게 좋은지 알아보기
 		
-		LOGGER.debug("model:  "+model);
-		LOGGER.debug("defaultVO: "+defaultVO);
-		LOGGER.debug("map: "+map);
+//		파라미터 유효성 검사
+		
+		/** model 객체 유효성 검사 Start */
+		if(model.isEmpty()){
+			LOGGER.debug("model객체에 데이터가 없습니다.");
+			return "Redirect:/selectHomeList.do";
+		}/** model 객체 유효성 검사 End */
+		if(map.isEmpty()){
+			LOGGER.debug("map객체에 데이터가 없습니다.");
+			return "Redirect:/selectHomeList.do";
+		}
+		
+//		map에 null이 있다면
+		if(map.size()>0){
+			LOGGER.debug("map.size()>0:   "+map.size());
+			for(int i=0; map.size()>i; i++){
+				if(map.get(i)==null){
+					LOGGER.debug("map.get("+i+") == null:   "+map.get(i));
+					LOGGER.debug("map.size()>0:   "+map.toString());
+				}
+			}
+		}
+
+		/** defaultVO 객체 유효성 검사 Start */
+		if(defaultVO != null){
+			/** 검색조건 */
+			String searchCondition = defaultVO.getSearchCondition();
+			/** 검색Keyword */
+			String searchKeyword = defaultVO.getSearchKeyword();
+			/** 검색사용여부 */
+			String searchUseYn = defaultVO.getSearchUseYn();
+			/** 현재페이지 */
+			int pageIndex = defaultVO.getPageIndex();
+			/** 페이지갯수 */
+			int pageUnit = defaultVO.getPageUnit();
+			/** 페이지사이즈 */
+			int pageSize = defaultVO.getPageSize();
+			/** firstIndex */
+			int firstIndex = defaultVO.getFirstIndex();
+			/** lastIndex */
+			int lastIndex = defaultVO.getLastIndex();
+			/** recordCountPerPage */
+			int recordCountPerPage = defaultVO.getRecordCountPerPage();
+			
+			/** 검색조건 */
+			if(searchCondition == null || searchCondition.equals("")){
+				LOGGER.info("입력된 검색어 조건이 없습니다.");
+			}
+			/** 검색Keyword */
+			if(searchKeyword == null || searchKeyword.equals("")){
+				LOGGER.info("입력된 검색어가 없습니다.");
+			}
+			/** 검색사용여부 */
+			if(searchUseYn == null || searchUseYn.equals("")){
+				LOGGER.info("검색기능을 사용하지 않습니다.");
+			}
+			/** 현재페이지 */
+			if(pageIndex == 0 || pageIndex < 0){
+				LOGGER.debug("현재페이지 번호가 없습니다.");
+			}
+			/** 페이지갯수 */
+			if(pageUnit == 0 || pageUnit < 0){
+				LOGGER.debug("페이지갯수가 없습니다.");
+			}
+			/** 페이지사이즈 */
+			if(pageSize == 0 || pageSize < 0){
+				LOGGER.debug("페이지 사이즈가 없습니다.");
+			}
+			/** firstIndex */
+			if(firstIndex == 0 || firstIndex < 0){
+				LOGGER.debug("시작 값이 없습니다");
+			}
+			/** lastIndex */
+			if(lastIndex == 0 || lastIndex < 0){
+				LOGGER.debug("마지막 값이 없습니다.");
+			}
+			/** recordCountPerPage */
+			if(recordCountPerPage == 0 || recordCountPerPage < 0){
+				LOGGER.info("현재페이지에 보여줄 값의 범위가 없습니다.");
+			}
+		}else{
+			LOGGER.debug("defaultVO 객체가 없습니다.");
+			return "redirect:/selectHomeList.do";
+		}/** defaultVO 객체 유효성 검사 End */
+		
 //		후기게시판 조회
 		List<Map<String,String>> selectAptReviewHomeList = tbAptReviewService.selectAptReviewHomeList(defaultVO);
 //		후기게시판 조회 데이터를 저장
@@ -117,11 +199,13 @@ public class TBAptReviewController{
 		
 		/** model 객체 */
 		if(model == null || model.equals("")){
-			LOGGER.info("model == null || model.equals('')");
+			LOGGER.debug("model객체에 데이터가 없습니다.");
+			return "Redirect:/homp";
 		}
 		/** defaultVO 객체 */
 		if(defaultVO == null || defaultVO.equals("")){
-			LOGGER.info("defaultVO == null || defaultVO.equals('')");
+			LOGGER.debug("defaultVO 객체가 없습니다");
+			return "Redirect:/homp";
 		}else{
 			/** 검색조건 */
 			String searchCondition = defaultVO.getSearchCondition();
@@ -146,44 +230,42 @@ public class TBAptReviewController{
 			
 			/** 검색조건 */
 			if(searchCondition == null || searchCondition.equals("")){
-				LOGGER.info("searchCondition == null || searchCondition.equals('')");
+				LOGGER.info("입력된 검색어 조건이 없습니다.");
 			}
 			/** 검색Keyword */
 			if(searchKeyword == null || searchKeyword.equals("")){
-				LOGGER.info("searchKeyword == null || searchKeyword.equals('')");
+				LOGGER.info("입력된 검색어가 없습니다.");
 			}
 			/** 검색사용여부 */
 			if(searchUseYn == null || searchUseYn.equals("")){
-				LOGGER.info("searchUseYn == null || searchUseYn.equals('')");
+				LOGGER.info("검색기능을 사용하지 않습니다.");
 			}
 			/** 현재페이지 */
 			if(pageIndex == 0 || pageIndex < 0){
-				LOGGER.info("pageIndex == 0 || pageIndex < 0");
+				LOGGER.debug("현재페이지 번호가 없습니다.");
 			}
 			/** 페이지갯수 */
 			if(pageUnit == 0 || pageUnit < 0){
-				LOGGER.info("pageUnit == 0 || pageUnit < 0");
+				LOGGER.debug("페이지갯수가 없습니다.");
 			}
 			/** 페이지사이즈 */
 			if(pageSize == 0 || pageSize < 0){
-				LOGGER.info("pageSize == 0 || pageSize < 0");
+				LOGGER.debug("페이지 사이즈가 없습니다.");
 			}
 			/** firstIndex */
 			if(firstIndex == 0 || firstIndex < 0){
-				LOGGER.info("firstIndex == 0 || firstIndex < 0");
+				LOGGER.debug("시작 값이 없습니다");
 			}
 			/** lastIndex */
 			if(lastIndex == 0 || lastIndex < 0){
-				LOGGER.info("lastIndex == 0 || lastIndex < 0");
+				LOGGER.debug("마지막 값이 없습니다.");
 			}
 			/** recordCountPerPage */
 			if(recordCountPerPage == 0 || recordCountPerPage < 0){
-				LOGGER.info("recordCountPerPage == 0 || recordCountPerPage < 0");
+				LOGGER.info("현재페이지에 보여줄 값의 범위가 없습니다.");
 			}
 		}	
 		/** defaultVO 객체 유효성검사 else End */		
-		
-		
 		
 		
 //		pageing setting
