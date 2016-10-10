@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean 객체 DI -->
+
+<bean id="tbAptReviewZoneVO" class="kr.co.edsk.ojt.APTReview.vo.TBAptReviewZoneVO"/>
+
+<bean id="aptReviewVO" class="kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO"/>
+
+<!-- 	  고유값(보통 class명)					클래스 경로  				-->
+<bean id="tBAptReviewVO" class="kr.co.edsk.ojt.APTReview.vo.TBAptReviewVO">
+
+<!-- 		생성자 일 경우			-->
+ 	<property name="aptReviewVO">
+<!--  	    위쪽의 bean id 참조 		-->
+ 	    <ref bean="aptReviewVO"/>
+ 	</property>
+
+<!--  	VO 객체의 변수와 name이 같아야 한다, Set함수가 있어야함 	-->
+	<property name="aptReviewNo" value="1"/>
+
+<!--  		List 타입일때 		-->
+	<property name="list">
+	    <list>
+	        <value>수영</value>
+	        <value>요리</value>
+	        <value>독서</value>
+	    </list>
+	</property>
+	
+<!--  						변수명 						-->
+	<property name="tbAptReviewZoneVO">
+<!-- 데이터 타입이 'tbAptReviewZoneVO' 라는 id 를 가지고 있는 bean의 class타입일때
+	    (상위에 TbAptReviewZoneVO 타입의 빈이 생성되어 있어야함) -->
+	    <ref bean="tbAptReviewZoneVO"/>
+	</property>
+	
+<!-- 생성자일 때(파라미터 순서대로 value)	-->
+	<constructor-arg>
+	    <value>이름</value>
+	</constructor-arg>
+	<constructor-arg>
+	    <value>나이</value>
+	</constructor-arg>
+<!-- 			위와 같은 결과		 -->	
+	<constructor-arg value="이름"/>
+	<constructor-arg value="나이"/>
+	
+</bean>
+ 
+</beans>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
   <display-name>kr.co.edsk.ojt.APTReview</display-name>
+  
+  <!-- 인코딩 필터 생성-->
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -9,10 +11,13 @@
       <param-value>utf-8</param-value>
     </init-param>
   </filter>
+  
+  <!-- 인코딩 필터 맵핑 -->
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
+  
   <filter>
     <filter-name>HTMLTagFilter</filter-name>
     <filter-class>egovframework.rte.ptl.mvc.filter.HTMLTagFilter</filter-class>
@@ -21,26 +26,35 @@
     <filter-name>HTMLTagFilter</filter-name>
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
+  
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath*:aptreview/spring/context-*.xml</param-value>
   </context-param>
+  <!-- 서블릿의 root context -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  
+  <!-- 서블릿 생성 -->
   <servlet>
     <servlet-name>action</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
+      <!-- ContextLoaderListener의 child context -->
       <param-value>/WEB-INF/config/aptreview/springmvc/dispatcher-servlet.xml</param-value>
     </init-param>
+    <!-- 0보다 크면 서버 스타트시 서블릿을 초기화 -->
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
+  <!-- 서블릿 맵핑 -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
